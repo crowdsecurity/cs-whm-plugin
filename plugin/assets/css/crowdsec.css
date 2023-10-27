@@ -1,24 +1,81 @@
+/* Doc */
+
+.crowdsec-doc h2{
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    color:#403978;
+}
+
+.crowdsec-doc h3{
+    color:#403978;
+}
+
+.crowdsec-doc-content {
+    padding-left:25px;
+}
+
+.crowdsec-doc-content a{
+    color:#f7a718;
+    font-weight:bold;
+}
+
+
+
+/*  Title */
+
+.crowdsec-title {
+    font-weight: bold;
+}
+
 /* Navigation */
 
-.navigation {
-    margin-bottom: 50px;
+.crowdsec-main-nav {
+    display: flex;
+    flex-wrap: wrap;
+    border-radius: 6px;
+    background-color: #f4f5f7;
+    min-height: 83px;
 }
 
-.navigation ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
+.crowdsec-main-nav > :not(:first-child) {
+    margin-left: 50px;
 }
 
-.navigation ul li {
-    float: left;
+.crowdsec-main-nav-item {
+    display: flex;
+    height: 82px;
+    font-size: 14px;
+    flex-direction: column;
 }
 
-.navigation a {
-    display: block;
-    padding: 8px;
-    background-color: #dddddd;
+.crowdsec-main-nav-item a {
+    color: #403978;
+    font-weight: bold;
+}
+
+.crowdsec-main-nav-item.active {
+    border-bottom: 3px solid #f7a718;
+}
+
+.crowdsec-main-nav-wrapper {
+    height: 84px;
+    overflow-y: hidden;
+    margin-bottom: 32px;
+}
+
+.crowdsec-main-nav-wrapper .crowdsec-main-nav-item > :nth-child(1) {
+    cursor: pointer;
+    flex-grow: 1;
+    text-decoration: none;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.crowdsec-logo img {
+    height: 50px;
+    margin-bottom: 14px;
 }
 
 
@@ -27,3 +84,194 @@
 #services {
     padding: 0px 0px 20px 0px;
 }
+
+#decisions-disclaimer {
+    border: 1px solid #000000;
+    padding: 10px 10px 0px 10px;
+}
+
+.crowdsec-table-wrapper .col-md-12
+{
+    padding: 0px;
+}
+
+/* tabs */
+
+.search .fa-search {
+    font-weight: bolder !important;
+}
+
+.fa-refresh::before {
+    content: "\f021";
+}
+
+.bootgrid-header .btn .icon {
+    display: inline-block !important;
+}
+
+
+.crowdsecTable {
+    table-layout: auto;
+
+}
+
+.loading {
+    text-align: center;
+    padding: 4rem;
+}
+
+/* Acquisition */
+
+.crowdsec-acquis-title {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+
+.crowdsec-acquis-title a {
+    margin-left: auto;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    color: #403978;
+    font-weight: bold;
+}
+.crowdsec-acquis-title a span{
+    padding-left:10px;
+    padding-right: 10px;
+}
+
+#acquisition-add {
+    float: right;
+}
+
+#acquisitions {
+    width: 100%;
+    table-layout: fixed;
+}
+
+#acquisitions td.content {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#acquisitions td.content:hover {
+    overflow: visible;
+    white-space: normal;
+}
+
+#acquisitions .unread-file {
+    border: none;
+    position: relative;
+    display: inline;
+}
+
+#acquisitions .unread-file .fa-exclamation-triangle {
+    margin: 0 10px;
+}
+
+#acquisitions .unread-file .warning-message {
+    min-width: 300px;
+    border-radius: 4px;
+    padding: 15px;
+    position: absolute;
+    left: 100px;
+    bottom: 10px;
+    z-index: 999;
+
+}
+
+#acquisitions .unread-file {
+    cursor: help;
+}
+
+form[name="acquisition"] {
+    max-width: 60%;
+}
+
+input[type="text"],
+input[type="number"],
+textarea {
+    max-width: 80%;
+}
+
+select {
+    max-width: 40%;
+}
+
+
+/* Service */
+
+.crowdsec-service {
+    display: flex;
+    align-items: center;
+}
+
+.crowdsec-service p {
+    margin: 0;
+}
+
+.crowdsec-services {
+    padding: 1rem;
+    border: 1px solid #dddddd;
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.crowdsec-services .crowdsec-service:last-child {
+    margin-left: auto;
+}
+
+#refresh-crowdsec-btn {
+    margin-left: 1rem;
+}
+#restart-crowdsec-btn span {
+    display: block;
+}
+
+
+.loader {
+    border: 2px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 2px solid #3498db;
+    width: 12px;
+    height: 12px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        -ms-transform: rotate(0deg);
+        /* IE 9 */
+        transform: rotate(0deg);
+        /* Standard syntax */
+    }
+
+    100% {
+        -ms-transform: rotate(360deg);
+        /* IE 9 */
+        transform: rotate(360deg);
+        /* Standard syntax */
+    }
+}
+
+@-ms-keyframes spin {
+
+    /* IE 10 */
+    0% {
+        -ms-transform: rotate(0deg);
+    }
+
+    100% {
+        -ms-transform: rotate(360deg);
+    }
+}
+
+#restart-crowdsec-btn {
+    width: 200px;
+    justify-content: center;
+    text-align: center;
+}
+
+

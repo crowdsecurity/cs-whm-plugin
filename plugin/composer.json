@@ -1,5 +1,5 @@
 {
-    "name": "crowdsec/plugin-whm",
+    "name": "crowdsec/whm-plugin",
     "description": "crowsec-whm-plugin",
     "type": "whm-plugin",
     "minimum-stability": "stable",
@@ -19,7 +19,8 @@
     "keywords": [
         "crowdsec",
         "security",
-        "plugin"
+        "plugin",
+        "whm"
     ],
     "config" : {
         "platform": {
@@ -27,12 +28,19 @@
         }
     },
     "require": {
-        "symfony/yaml": "^5.4.23"
+        "symfony/yaml": "^5.4.23",
+        "symfony/form": "^5.4.30",
+        "twig/twig": "^3.7.1",
+        "symfony/twig-bridge": "^5.4.26",
+        "symfony/http-foundation": "^5.4.30",
+        "symfony/translation": "^5.4.30",
+        "symfony/security-csrf": "^5.4.27",
+        "symfony/config": "^5.4.26",
+        "ext-json": "*"
     },
     "autoload": {
         "psr-4": {
-            "Crowdsec\\": "src/"
+            "CrowdSec\\Whm\\": "src/"
         }
     }
-    
 }

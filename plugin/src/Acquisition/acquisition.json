@@ -1,0 +1,372 @@
+{
+  "v1": {
+    "common": {
+      "source": {
+        "type": "enum",
+        "values": [
+          "file",
+          "journactl",
+          "cloudwatch",
+          "docker",
+          "kafka",
+          "kinesis",
+          "k8s_audit",
+          "s3",
+          "syslog"
+        ],
+        "label": "Source",
+        "required": true
+      },
+      "mode": {
+        "type": "string",
+        "label": "Mode"
+      },
+      "labels": {
+        "type": "map",
+        "values": {
+          "type": {
+            "type": "string",
+            "label": "Labels Type",
+            "help": "Example: syslog",
+            "required": true
+          },
+          "external_format": {
+            "type": "string",
+            "label": "Labels External Format",
+            "help": "Example: fastly"
+          }
+        }
+      },
+      "log_level": {
+        "type": "enum",
+        "values": [
+          "trace",
+          "debug",
+          "info",
+          "warning",
+          "error",
+          "fatal",
+          "panic"
+        ],
+        "label": "Log Level"
+      },
+      "name": {
+        "type": "string",
+        "label": "Name"
+      },
+      "use_time_machine": {
+        "type": "boolean",
+        "label": "Use Time Machine"
+      },
+      "unique_id": {
+        "type": "string",
+        "label": "Unique ID"
+      },
+      "transform": {
+        "type": "string",
+        "label": "Transform"
+      }
+    },
+    "file": {
+      "filenames": {
+        "type": "array",
+        "label": "Filenames",
+        "help": "Absolute path (one filename per line)"
+      },
+      "exclude_regexps": {
+        "type": "array",
+        "label": "Exclude Regexps"
+      },
+      "filename": {
+        "type": "string",
+        "label": "Filename"
+      },
+      "force_inotify": {
+        "type": "boolean",
+        "label": "Force Inotify"
+      },
+      "max_buffer_size": {
+        "type": "integer",
+        "label": "Max Buffer Size"
+      },
+      "poll_without_inotify": {
+        "type": "boolean",
+        "label": "Poll Without Inotify"
+      }
+    },
+    "journactl": {
+      "journalctl_filter": {
+        "type": "array",
+        "label": "Journalctl Filter",
+        "help": "Example: _SYSTEMD_UNIT=sshd.service (One journalctl command per line)"
+      }
+    },
+    "cloudwatch": {
+      "group_name": {
+        "type": "string"
+      },
+      "stream_regexp": {
+        "type": "string",
+        "label": "Stream Regexp"
+      },
+      "stream_name": {
+        "type": "string",
+        "label": "Stream Name"
+      },
+      "describelogstreams_limit": {
+        "type": "integer",
+        "label": "Log streams describe Limit"
+      },
+      "getlogeventspages_limit": {
+        "type": "integer",
+        "label": "Log events pages Limit"
+      },
+      "poll_new_stream_interval": {
+        "type": "integer",
+        "label": "Poll New Stream Interval",
+        "help": "Duration in seconds"
+      },
+      "max_stream_age": {
+        "type": "integer",
+        "label": "Max Stream Age",
+        "help": "Duration in seconds"
+      },
+      "poll_stream_interval": {
+        "type": "integer",
+        "label": "Poll Stream Interval",
+        "help": "Duration in seconds"
+      },
+      "stream_read_timeout": {
+        "type": "integer",
+        "label": "Stream Read Timeout",
+        "help": "Duration in seconds"
+      },
+      "aws_api_timeout": {
+        "type": "integer",
+        "label": "AWS API Timeout",
+        "help": "Duration in seconds"
+      },
+      "aws_profile": {
+        "type": "string",
+        "label": "AWS Profile"
+      },
+      "prepend_cloudwatch_timestamp": {
+        "type": "boolean",
+        "label": "Prepend Cloudwatch Timestamp"
+      },
+      "aws_config_dir": {
+        "type": "string",
+        "label": "AWS Config Dir"
+      },
+      "aws_region": {
+        "type": "string",
+        "label": "AWS Region"
+      }
+    },
+    "docker": {
+      "check_interval": {
+        "type": "string",
+        "label": "Check Interval"
+      },
+      "follow_stdout": {
+        "type": "boolean",
+        "label": "Follow Stdout"
+      },
+      "follow_stderr": {
+        "type": "boolean",
+        "label": "Follow Stderr"
+      },
+      "until": {
+        "type": "string",
+        "label": "Until"
+      },
+      "since": {
+        "type": "string",
+        "label": "Since"
+      },
+      "docker_host": {
+        "type": "string",
+        "label": "Docker Host"
+      },
+      "container_name": {
+        "type": "array",
+        "label": "Container Name"
+      },
+      "container_id": {
+        "type": "array",
+        "label": "Container ID"
+      },
+      "container_name_regexp": {
+        "type": "array",
+        "label": "Container Name Regexp"
+      },
+      "container_id_regexp": {
+        "type": "array",
+        "label": "Container ID Regexp"
+      },
+      "force_inotify": {
+        "type": "boolean",
+        "label": "Force Inotify"
+      }
+    },
+    "kafka": {
+      "brokers": {
+        "type": "array",
+        "label": "Brokers"
+      },
+      "topic": {
+        "type": "string",
+        "label": "Topic"
+      },
+      "group_id": {
+        "type": "string",
+        "label": "Group ID"
+      },
+      "timeout": {
+        "type": "string",
+        "label": "Timeout"
+      },
+      "tls": {
+        "type": "map",
+        "values": {
+          "insecure_skip_verify": {
+            "type": "boolean",
+            "label": "TLS Insecure Skip Verify",
+            "group": "tls"
+          },
+          "client_cert": {
+            "type": "string",
+            "label": "TLS Client Cert",
+            "group": "tls"
+          },
+          "client_key": {
+            "type": "string",
+            "label": "TLS Client Key",
+            "group": "tls"
+          },
+          "ca_cert": {
+            "type": "string",
+            "label": "TLS CA Cert",
+            "group": "tls"
+          }
+        }
+      }
+    },
+    "kinesis": {
+      "stream_name": {
+        "type": "string",
+        "label": "Stream Name"
+      },
+      "stream_arn": {
+        "type": "string",
+        "label": "Stream ARN"
+      },
+      "use_enhanced_fanout": {
+        "type": "boolean",
+        "label": "Use Enhanced Fanout"
+      },
+      "aws_profile": {
+        "type": "string",
+        "label": "AWS Profile"
+      },
+      "aws_region": {
+        "type": "string",
+        "label": "AWS Region"
+      },
+      "aws_endpoint": {
+        "type": "string",
+        "label": "AWS Endpoint"
+      },
+      "consumer_name": {
+        "type": "string",
+        "label": "Consumer Name"
+      },
+      "from_subscription": {
+        "type": "boolean",
+        "label": "From Subscription"
+      },
+      "max_retries": {
+        "type": "integer",
+        "label": "Max Retries"
+      }
+    },
+    "k8s_audit": {
+      "listen_addr": {
+        "type": "string",
+        "label": "Listen Addr"
+      },
+      "listen_port": {
+        "type": "integer",
+        "label": "Listen Port"
+      },
+      "webhook_path": {
+        "type": "string",
+        "label": "Webhook Path"
+      }
+    },
+    "s3": {
+      "aws_profile": {
+        "type": "string",
+        "label": "AWS Profile"
+      },
+      "aws_region": {
+        "type": "string",
+        "label": "AWS Region"
+      },
+      "aws_endpoint": {
+        "type": "string",
+        "label": "AWS Endpoint"
+      },
+      "bucket_name": {
+        "type": "string",
+        "label": "Bucket Name"
+      },
+      "prefix": {
+        "type": "string",
+        "label": "Prefix"
+      },
+      "key": {
+        "type": "string",
+        "label": "Key"
+      },
+      "polling_method": {
+        "type": "string",
+        "label": "Polling Method"
+      },
+      "polling_interval": {
+        "type": "integer",
+        "label": "Polling Interval"
+      },
+      "sqs_name": {
+        "type": "string",
+        "label": "SQS Name"
+      },
+      "sqs_format": {
+        "type": "string",
+        "label": "SQS Format"
+      },
+      "max_buffer_size": {
+        "type": "integer",
+        "label": "Max Buffer Size"
+      }
+    },
+    "syslog": {
+      "protocol": {
+        "type": "string",
+        "label": "Protocol"
+      },
+      "listen_port": {
+        "type": "integer",
+        "label": "Listen Port"
+      },
+      "listen_addr": {
+        "type": "string",
+        "label": "Listen Addr"
+      },
+      "max_message_len": {
+        "type": "integer",
+        "label": "Max Message Length"
+      }
+    }
+  }
+}

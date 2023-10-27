@@ -1,0 +1,61 @@
+{% include('partials/styles.html.twig') %}
+{% include('partials/acquis-scripts.html.twig') %}
+{% include('partials/services-scripts.html.twig') %}
+{% include('partials/breadcrumbs.html.twig') with {'cpSession': cpSession} %}
+{% include('partials/navigation.html.twig') with {'cpSession': cpSession, 'active': 'acquisitions'} %}
+
+<script>
+    window.addEventListener("load", function (e) {
+        CrowdSecAcquis.initForm();
+        CrowdSecServices.initServices();
+    });
+</script>
+
+<div class="container-fluid">
+    {% include('partials/messages.html.twig') with {'no_exec_func': no_exec_func} %}
+    {% include('partials/services.html.twig') with {'restart_needed': restart_needed} %}
+    <div class="row">
+        <div class="col-md-12">
+            {% if flashes.notice %}
+                <div class="alert alert-info">
+                    <ul>
+                        {% for message in flashes.notice %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            {% if flashes.success %}
+                <div class="alert alert-success">
+                    <ul>
+                        {% for message in flashes.success %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            {% if flashes.error %}
+                <div class="alert alert-danger">
+                    <ul>
+                        {% for message in flashes.error %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            <div class="crowdsec-acquis-title">
+                <h2>
+                    {% if current %}
+                        Edit acquisition ({{ current.filepath }})
+                    {%  else %}
+                        Add new acquisition
+                    {% endif %}
+                </h2>
+                <a href="{{ cpSession }}/cgi/crowdsec/endpoints/acquisitions.php">
+                    <i class="fas fa-arrow-left"></i><span>Back to acquisitions list</span><i class="fas fa-list"></i>
+                </a>
+            </div>
+            {{ form(form)}}
+            </div>
+        </div>
+    </div>

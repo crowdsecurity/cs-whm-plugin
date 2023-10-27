@@ -1,0 +1,20 @@
+<div class="row">
+    <div class="col-md-12 crowdsec-services">
+        <div class="crowdsec-service">
+            <p>CrowdSec service status:
+                <span id="crowdsec-status">
+                    <i class="fa fa-spinner fa-spin"></i>
+                </span>
+            </p>
+        </div>
+        <div class="crowdsec-service">
+            <button class="btn btn-secondary" id="refresh-crowdsec-btn">Refresh CrowdSec status</button>
+        </div>
+        <div class="crowdsec-service">
+            <button class="btn btn-primary" id="restart-crowdsec-btn">
+                <span>Restart CrowdSec service</span>
+                {% if restart_needed %} <span>(A restart is needed)</span> {% endif %}
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,122 @@
+{% include('partials/styles.html.twig') %}
+{% include('partials/acquis-scripts.html.twig') %}
+{% include('partials/services-scripts.html.twig') %}
+{% include('partials/breadcrumbs.html.twig') with {'cpSession': cpSession} %}
+{% include('partials/navigation.html.twig') with {'cpSession': cpSession, 'active': 'acquisitions'} %}
+
+<script>
+    window.addEventListener("load", function (e) {
+        CrowdSecAcquis.initList();
+        CrowdSecServices.initServices();
+    });
+</script>
+
+<div class="container-fluid">
+    {% include('partials/messages.html.twig') with {'no_exec_func': no_exec_func} %}
+    {% include('partials/services.html.twig') with {'restart_needed': restart_needed} %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-danger" style="display: none;">
+                <ul>
+                    <li></li>
+                </ul>
+            </div>
+            <div class="alert alert-info" style="display: none;">
+                <ul>
+                    <li></li>
+                </ul>
+            </div>
+            <div class="alert alert-success" style="display: none;">
+                <ul>
+                    <li></li>
+                </ul>
+            </div>
+            <h2>Acquisitions list</h2>
+            <div id="acquisition-add">
+                <button class="btn btn-primary" onclick="window.location.href='{{ cpSession }}/cgi/crowdsec/endpoints/acquisitions_edit.php';">
+                    Add acquisition
+                </button>
+            </div>
+            <table id="acquisitions" class="table table-condensed table-hover table-striped crowdsecTable">
+                <thead>
+                    <tr>
+                        <th data-column-id="filepath" data-order="asc">Filepath</th>
+                        <th data-column-id="labels_type">Labels Type</th>
+                        <th data-column-id="content">Content</th>
+                        <th data-column-id="delete" data-formatter="delete" data-visible-in-selection="false"></th>
+                        <th data-column-id="edit" data-visible-in-selection="false"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for hash,acquisition in acquisitions %}
+                        <tr id="acquisition-{{ hash }}">
+                            <td>{{ acquisition.filepath }}</td>
+                            <td>{{ acquisition.labels.type }}</td>
+                            <td class="content">
+                                <br>
+                                {% for key,value in acquisition %}
+                                    {% if key != 'filepath' %}
+                                        {% if value is iterable %}
+                                            {{ key }}:<br>
+                                            {% for k,val in value %}
+                                                {% if key == 'filenames' %}
+                                                    {% if val in read_files %}
+                                                        {{ val }}
+                                                    {% else %}
+                                                        <div class="unread-file alert-{{ unread_warning_class }}">{{ val }}<i class="fa fa-exclamation-triangle"></i>
+                                                        </div>
+                                                    {% endif %}
+                                                {% else %}
+                                                    {{ val }}
+                                                {% endif %}
+                                                {% if not loop.last %}
+                                                    <br>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% else %}
+                                            {% if key == 'filename' %}
+                                                {% if value in read_files %}
+                                                    {{ key }}:{{ value }}
+                                                {% else %}
+                                                    <div class="unread-file alert-{{ unread_warning_class }}">{{ key }}:{{ value }}<i class="fa fa-exclamation-triangle"></i>
+                                                    </div>
+                                                {% endif %}
+                                            {% else %}
+                                                {{ key }}:{{ value }}
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endif %}
+                                    {% if not loop.last %}
+                                        <br><br>
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+                            <td>
+                                <button class="btn btn-secondary" name="delete" type="submit" value="{{ hash }}">Delete</button>
+                            </td>
+                            <td>
+                                {% if acquisition.filepath !=  main_file %}
+                                    <button class="btn btn-secondary" onclick="window.location.href='{{ cpSession }}/cgi/crowdsec/endpoints/acquisitions_edit.php?id={{ hash }}';">
+                                        Edit
+                                    </button>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr></tr>
+                </tfoot>
+            </table>
+
+            <div style="display:none;" id="delete-dialog-confirm" title="Delete this acquisition?">
+                <p>
+                    <span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>This
+                                            acquisition will be permanently deleted and cannot be recovered. Are you sure?</p>
+                <div class="delete-loading" style="display:none;">
+                    <i class="fa fa-spinner fa-spin"></i>Deleting, please wait..
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

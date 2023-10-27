@@ -24,20 +24,12 @@ install () {
       chmod -R 755 /usr/local/cpanel/whostmgr/docroot/addon_plugins/crowdsec
   fi
   
-  # unused
-  # Check for and create the directory for plugin template files.
-  #if [ ! -d /usr/local/cpanel/whostmgr/docroot/templates/crowdsec ]
-  #  then
-  #    mkdir /usr/local/cpanel/whostmgr/docroot/templates/crowdsec
-  #    chmod 755 /usr/local/cpanel/whostmgr/docroot/templates/crowdsec
-  #fi
-  
+
   # Register the plugin with AppConfig.
   /usr/local/cpanel/bin/register_appconfig ./plugin/crowdsec.conf
     
   # Copy plugin files to their locations and update permissions.
-  /bin/cp  ./plugin/*.php /usr/local/cpanel/whostmgr/docroot/cgi/crowdsec
-  /bin/cp -R ./plugin/includes /usr/local/cpanel/whostmgr/docroot/cgi/crowdsec
+  /bin/cp -R ./plugin/endpoints /usr/local/cpanel/whostmgr/docroot/cgi/crowdsec
   /bin/cp -R ./plugin/assets /usr/local/cpanel/whostmgr/docroot/cgi/crowdsec
   /bin/cp -R ./plugin/src /usr/local/cpanel/whostmgr/docroot/cgi/crowdsec
   /bin/cp -R ./plugin/vendor /usr/local/cpanel/whostmgr/docroot/cgi/crowdsec

@@ -1,23 +1,22 @@
-# CrowdSec plugin for WHM
+![CrowdSec Logo](https://raw.githubusercontent.com/crowdsecurity/cs-whm-plugin/main/docs/images/logo_crowdsec.png)
+
+# CrowdSec WHM plugin
+
+> The official WHM plugin for the CrowdSec Security Engine
+
+[![Version](https://img.shields.io/github/v/release/crowdsecurity/cs-whm-plugin?include_prereleases)](https://github.com/crowdsecurity/cs-whm-plugin/releases/)
+[![Licence](https://img.shields.io/github/license/crowdsecurity/cs-whm-plugin)](https://github.com/crowdsecurity/cs-whm-plugin/blob/main/LICENSE)
+
 
 ## Installation
 
-* You need to have CPanel+WHM installed (CPanel version > 66)
-* Clone the repository in your home folder and get in it: 
-  * ```git clone git@github.com:crowdsecurity/plugin-whm.git```
-  * ```cd /plugin-whm```
-* Run the install script as root
-  * ```sudo sh crowdsec.sh install```
-  * You should see:
-    * Installing CrowdSec plugin...
-    * crowdsec registered
-* Go back to your WHM dashboard 
-  * Crowdsec should appear in the sidebar (in the bottom Plugins sections)
-  
+See [Installation Guide](https://github.com/crowdsecurity/cs-whm-plugin/blob/main/docs/INSTALLATION_GUIDE.md)
+
+## Developer guide
+
+See [Developer guide](https://github.com/crowdsecurity/cs-whm-plugin/blob/main/docs/DEVELOPER.md)
 
 
+## License
 
-
-
-
-
+[MIT](https://github.com/crowdsecurity/cs-whm-plugin/blob/main/LICENSE)

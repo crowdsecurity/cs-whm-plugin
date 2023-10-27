@@ -1,0 +1,90 @@
+name: Coding Standards
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
+  workflow_dispatch:
+    inputs:
+      coverage_report:
+        type: boolean
+        description: Generate PHPUNIT Code Coverage report
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  test-suite:
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: ['7.4', '8.0', '8.1', '8.2', '8.3']
+
+    name: Coding standards test
+    runs-on: ubuntu-latest
+    if: ${{ !contains(github.event.head_commit.message, 'chore(') }}
+    env:
+      EXTENSION_PATH: "my-code/whm-plugin"
+
+    steps:
+      - name: Install DDEV
+        run: |
+          # @see https://ddev.readthedocs.io/en/stable/#installationupgrade-script-linux-and-macos-armarm64-and-amd64-architectures
+          curl -fsSL https://apt.fury.io/drud/gpg.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/ddev.gpg > /dev/null
+          echo "deb [signed-by=/etc/apt/trusted.gpg.d/ddev.gpg] https://apt.fury.io/drud/ * *" | sudo tee /etc/apt/sources.list.d/ddev.list
+          sudo apt-get -q update
+          sudo apt-get -q -y install libnss3-tools ddev
+          mkcert -install
+          ddev config global --instrumentation-opt-in=false --omit-containers=ddev-ssh-agent
+
+      - name: Create empty PHP DDEV project
+        run: ddev config --project-type=php --project-name=crowdsec-whm-plugin  --php-version=${{ matrix.php-version }}
+
+      - name: Add-ons install
+        run: ddev get julienloizelet/ddev-tools
+
+      - name: Start DDEV  with PHP ${{ matrix.php-version }}
+        run: ddev start
+
+      - name: Some DEBUG information
+        run: |
+          ddev --version
+          ddev exec php -v
+
+      - name: Clone sources
+        uses: actions/checkout@v3
+        with:
+          path: ${{env.EXTENSION_PATH}}
+
+      - name: Install CrowdSec Coding standards tools
+        run: |
+          ddev composer update --working-dir ./${{env.EXTENSION_PATH}}/plugin/tools/coding-standards
+
+      - name: Run PHPCS
+        run: |
+          ddev phpcs ./${{env.EXTENSION_PATH}}/plugin/tools/coding-standards ${{env.EXTENSION_PATH}}/plugin/src PSR12
+          ddev phpcs ./${{env.EXTENSION_PATH}}/plugin/tools/coding-standards ${{env.EXTENSION_PATH}}/plugin/endpoints PSR12
+
+      - name: Run PHPMD
+        run: |
+          ddev phpmd ./${{env.EXTENSION_PATH}}/plugin/tools/coding-standards phpmd/rulesets.xml ../../src
+          ddev phpmd ./${{env.EXTENSION_PATH}}/plugin/tools/coding-standards phpmd/rulesets.xml ../../endpoints
+
+      - name: Run PHPSTAN
+        run: |
+          ddev phpstan /var/www/html/${{env.EXTENSION_PATH}}/plugin/tools/coding-standards phpstan/phpstan.neon /var/www/html/${{env.EXTENSION_PATH}}/plugin/src
+          ddev phpstan /var/www/html/${{env.EXTENSION_PATH}}/plugin/tools/coding-standards phpstan/phpstan-endpoints.neon /var/www/html/${{env.EXTENSION_PATH}}/plugin/endpoints
+
+      - name: Run PSALM
+        run: |
+          ddev psalm ./${{env.EXTENSION_PATH}}/plugin/tools/coding-standards /var/www/html/${{env.EXTENSION_PATH}}/plugin/tools/coding-standards/psalm
+          ddev psalm ./${{env.EXTENSION_PATH}}/plugin/tools/coding-standards ./${{env.EXTENSION_PATH}}/plugin/tools/coding-standards/psalm/endpoints
+
+      - name: Run PHPUNIT Code Coverage
+        if: github.event.inputs.coverage_report == 'true'
+        run: |
+          ddev xdebug
+          ddev php -dxdebug.mode=coverage  ./${{env.EXTENSION_PATH}}/plugin/tools/coding-standards/vendor/bin/phpunit --configuration ./${{env.EXTENSION_PATH}}/plugin/tools/coding-standards/phpunit/phpunit.xml --coverage-text=./${{env.EXTENSION_PATH}}/plugin/tools/coding-standards/phpunit/code-coverage/report.txt
+          cat ${{env.EXTENSION_PATH}}/plugin/tools/coding-standards/phpunit/code-coverage/report.txt

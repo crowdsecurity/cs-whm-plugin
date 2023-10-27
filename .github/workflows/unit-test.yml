@@ -1,0 +1,72 @@
+name: Unit tests
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
+  workflow_dispatch:
+    inputs:
+      unit_tests:
+        type: boolean
+        description: Run Unit tests
+        default: true
+
+permissions:
+  contents: read
+
+jobs:
+  test-suite:
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: ['7.4','8.0','8.1','8.2','8.3']
+
+    name: Unit test
+    runs-on: ubuntu-latest
+    if: ${{ !contains(github.event.head_commit.message, 'chore(') }}
+    env:
+      EXTENSION_PATH: "my-code/whm-plugin"
+
+    steps:
+      - name: Install DDEV
+        run: |
+          # @see https://ddev.readthedocs.io/en/stable/#installationupgrade-script-linux-and-macos-armarm64-and-amd64-architectures
+          curl -fsSL https://apt.fury.io/drud/gpg.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/ddev.gpg > /dev/null
+          echo "deb [signed-by=/etc/apt/trusted.gpg.d/ddev.gpg] https://apt.fury.io/drud/ * *" | sudo tee /etc/apt/sources.list.d/ddev.list
+          sudo apt-get -q update
+          sudo apt-get -q -y install libnss3-tools ddev
+          mkcert -install
+          ddev config global --instrumentation-opt-in=false --omit-containers=ddev-ssh-agent
+
+      - name: Create empty PHP DDEV project
+        run: ddev config --project-type=php --project-name=crowdsec-whm-plugin  --php-version=${{ matrix.php-version }}
+
+      - name: Add-ons install
+        run: ddev get julienloizelet/ddev-tools
+
+      - name: Start DDEV  with PHP ${{ matrix.php-version }}
+        run: ddev start
+
+      - name: Some DEBUG information
+        run: |
+          ddev --version
+          ddev exec php -v
+
+      - name: Clone sources
+        uses: actions/checkout@v3
+        with:
+          path: ${{env.EXTENSION_PATH}}
+
+
+      - name: Install CrowdSec tool dependencies
+        run: |
+          ddev composer update --working-dir=${{env.EXTENSION_PATH}}/plugin/tools/coding-standards 
+
+      - name: Run Unit tests
+        if: |
+          github.event.inputs.unit_tests == 'true' ||
+          github.event_name == 'push'
+        run:  ddev php ./${{env.EXTENSION_PATH}}/plugin/tools/coding-standards/vendor/bin/phpunit --debug ./${{env.EXTENSION_PATH}}/plugin/tests/Unit --testdox
+
+

@@ -1,0 +1,24 @@
+<div class="crowdsec-main-nav-wrapper">
+    <div class="crowdsec-main-nav">
+            <div class="crowdsec-main-nav-item crowdsec-logo {% if active == "doc"   %} active {% endif %}">
+                <a href="{{ cpSession }}/cgi/crowdsec/endpoints/doc.php">
+                    <img alt="CrowdSec logo" src="{{ cpSession }}/cgi/crowdsec/assets/css/images/logo_crowdsec.png">
+                </a>
+            </div>
+            <div class="crowdsec-main-nav-item {% if active == "status"   %} active {% endif %}">
+                <a href="{{ cpSession }}/cgi/crowdsec/endpoints/status.php">
+                    Status
+                </a>
+            </div>
+            <div class="crowdsec-main-nav-item {% if active == "metrics"   %} active {% endif %}">
+                <a href="{{ cpSession }}/cgi/crowdsec/endpoints/metrics.php">
+                    Metrics
+                </a>
+            </div>
+            <div class="crowdsec-main-nav-item {% if active == "acquisitions"   %} active {% endif %}">
+                <a href="{{ cpSession }}/cgi/crowdsec/endpoints/acquisitions.php">
+                    Acquisitions
+                </a>
+            </div>
+    </div>
+</div>
