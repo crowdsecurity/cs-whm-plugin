@@ -1,0 +1,38 @@
+{
+    "name": "crowdsec/plugin-whm",
+    "description": "crowsec-whm-plugin",
+    "type": "whm-plugin",
+    "minimum-stability": "stable",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "CrowdSec",
+            "email": "info@crowdsec.net"
+        },
+        {
+            "name": "Julien Loizelet",
+            "homepage": "https://github.com/julienloizelet/",
+            "email": "julienloizelet@okaeli.com",
+            "role": "Developer"
+        }
+    ],
+    "keywords": [
+        "crowdsec",
+        "security",
+        "plugin"
+    ],
+    "config" : {
+        "platform": {
+            "php": "7.2.5"
+        }
+    },
+    "require": {
+        "symfony/yaml": "^5.4.23"
+    },
+    "autoload": {
+        "psr-4": {
+            "Crowdsec\\": "src/"
+        }
+    }
+    
+}
