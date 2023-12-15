@@ -120,7 +120,7 @@ class Shell extends Data
         return $metrics['acquisition'] ?? [];
     }
 
-    private function getExecFunc()
+    private function getExecFunc(): string
     {
         if (null === $this->execFunc) {
             $result = self::NO_EXEC_FUNC;

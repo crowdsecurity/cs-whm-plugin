@@ -8,7 +8,6 @@ use CrowdSec\Whm\Exception;
 
 /**
  * The config class.
- * List all acquisition based on yaml server files.
  *
  * @author    CrowdSec team
  *
@@ -19,13 +18,15 @@ use CrowdSec\Whm\Exception;
  */
 class Config
 {
-    public const COMMON_CONFIG = 'common';
     public const CONFIG_PATH = __DIR__ . '/acquisition.json';
     private $config;
     private $configsByType = [];
     private $mapConfig;
     private $mapNames;
 
+    /**
+     * @throws Exception
+     */
     public function __construct(string $version)
     {
         $content = json_decode(file_get_contents(self::CONFIG_PATH), true);
@@ -85,11 +86,6 @@ class Config
         }
 
         return $this->mapNames;
-    }
-
-    public function getSources(): array
-    {
-        return array_values(array_diff(array_keys($this->config), [self::COMMON_CONFIG]));
     }
 
     private function getMapConfigs(): array

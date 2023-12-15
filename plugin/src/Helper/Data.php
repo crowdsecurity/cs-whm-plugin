@@ -20,6 +20,9 @@ class Data
     private $configPath = '/etc/crowdsec/config.yaml';
     private $yamlAcquisitionByHash = [];
 
+    /**
+     * @throws Exception
+     */
     public function convertFormToYaml(array $formData): array
     {
         $acquisitionData = [];
@@ -71,6 +74,9 @@ class Data
         return $acquisitionData;
     }
 
+    /**
+     * @throws Exception
+     */
     public function convertYamlToForm(array $acquisitionData): array
     {
         $formData = [];
@@ -125,6 +131,9 @@ class Data
         return $this->acquisDir;
     }
 
+    /**
+     * @throws \RuntimeException
+     */
     public function getAcquisFromYamls(): array
     {
         $filePath = $this->getAcquisPath();
@@ -167,7 +176,10 @@ class Data
         return 'v1';
     }
 
-    public function getMultiYamlContent($filepath): array
+    /**
+     * @throws \RuntimeException
+     */
+    public function getMultiYamlContent(string $filepath): array
     {
         $contents = file_get_contents($filepath);
 
@@ -185,6 +197,9 @@ class Data
         return array_values($multiFileContents);
     }
 
+    /**
+     * @throws \RuntimeException
+     */
     public function getYamlAcquisitionByHash(string $hash): array
     {
         if (!isset($this->yamlAcquisitionByHash[$hash])) {
@@ -202,6 +217,9 @@ class Data
         return \hash('sha256', json_encode($array));
     }
 
+    /**
+     * @throws \RuntimeException
+     */
     public function reloadYamlAcquisitionByHash(string $hash): array
     {
         $result = [];
@@ -308,13 +326,13 @@ class Data
         return null;
     }
 
-    private function formatDataByType($type, $data)
+    private function formatDataByType(string $type, $data)
     {
         $formatFunctions = [
-            'boolean' => function ($data) {
+            'boolean' => function ($data): string {
                 return $data ? 'true' : 'false';
             },
-            'array' => function ($data) {
+            'array' => function ($data): string {
                 return is_array($data) ? implode(\PHP_EOL, $data) : $data;
             },
             'default' => function ($data) {
@@ -325,6 +343,9 @@ class Data
         return ($formatFunctions[$type] ?? $formatFunctions['default'])($data);
     }
 
+    /**
+     * @return bool|int|mixed|string[]
+     */
     private function formatValue($value, string $configType = 'string')
     {
         switch ($configType) {
@@ -348,6 +369,9 @@ class Data
         return $this->configContent;
     }
 
+    /**
+     * @throws \RuntimeException
+     */
     private function getOverrideAcquisFiles(): array
     {
         $acquisDir = $this->getAcquisDir();
@@ -363,10 +387,8 @@ class Data
 
     /**
      * Retrieve yaml content as an array.
-     *
-     * @return array|mixed
      */
-    private function getYamlContent($filepath): array
+    private function getYamlContent(string $filepath): array
     {
         $result = [];
 
@@ -379,7 +401,7 @@ class Data
         return $result;
     }
 
-    private function getYamlContentFromString($value)
+    private function getYamlContentFromString(string $value): array
     {
         $result = [];
 
@@ -393,7 +415,10 @@ class Data
         return $result;
     }
 
-    private function handleDataByType(array $acquisitionData, array $configs, string $type, array &$formData)
+    /**
+     * @throws Exception
+     */
+    private function handleDataByType(array $acquisitionData, array $configs, string $type, array &$formData): void
     {
         $config = new Config($this->getAcquisitionVersion());
         $mapNames = $config->getMapNames();
@@ -434,7 +459,7 @@ class Data
 
     private function prepareOldContents(array $yamlContents, string $filepath): array
     {
-        return array_map(function ($yamlContent) use ($filepath) {
+        return array_map(function ($yamlContent) use ($filepath): array {
             $content = $this->getYamlContentFromString($yamlContent);
             $content['filepath'] = $filepath;
 
@@ -442,8 +467,14 @@ class Data
         }, $yamlContents);
     }
 
-    private function processArrayData($key, $data, $type, $source, $sourceConfigs, &$formData)
-    {
+    private function processArrayData(
+        string $key,
+        array $data,
+        string $type,
+        string $source,
+        array $sourceConfigs,
+        array &$formData
+    ): void {
         foreach ($data as $k => $v) {
             $compositeKey = $key . '_' . $k;
             if (in_array($compositeKey, $sourceConfigs)) {
@@ -452,8 +483,15 @@ class Data
         }
     }
 
-    private function processKeyData($key, $data, $type, $source, $sourceConfigs, &$formData, $mapNames)
-    {
+    private function processKeyData(
+        string $key,
+        $data,
+        string $type,
+        string $source,
+        array $sourceConfigs,
+        array &$formData,
+        array $mapNames
+    ): void {
         if (in_array($key, $mapNames) && is_array($data)) {
             $this->processArrayData($key, $data, $type, $source, $sourceConfigs, $formData);
         }
@@ -486,7 +524,7 @@ class Data
 
     private function processMultipleYamlContents(array $yamlContents, string $filepath, string $hash): bool
     {
-        $oldContents = array_map(function ($yamlContent) use ($filepath) {
+        $oldContents = array_map(function ($yamlContent) use ($filepath): array {
             $content = $this->getYamlContentFromString($yamlContent);
             $content['filepath'] = $filepath;
 
@@ -499,13 +537,16 @@ class Data
     /**
      * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
      */
-    private function recursiveKsort(&$item)
+    private function recursiveKsort(&$item): void
     {
         if (is_array($item)) {
             ksort($item);
         }
     }
 
+    /**
+     * @throws Exception
+     */
     private function validateFilepath(array $formData): void
     {
         if (empty($formData['filepath'])) {

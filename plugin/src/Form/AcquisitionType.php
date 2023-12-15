@@ -1,21 +1,11 @@
 <?php
 
-/**
- * The acquisition form type class.
- *
- * @author    CrowdSec team
- *
- * @see      https://crowdsec.net CrowdSec Official Website
- *
- * @copyright Copyright (c) 2020+ CrowdSec
- * @license   MIT License
- */
-
 declare(strict_types=1);
 
 namespace CrowdSec\Whm\Form;
 
 use CrowdSec\Whm\Acquisition\Config;
+use CrowdSec\Whm\Exception;
 use CrowdSec\Whm\Helper\Data as Helper;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -27,8 +17,22 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * The acquisition form type class.
+ *
+ * @author    CrowdSec team
+ *
+ * @see      https://crowdsec.net CrowdSec Official Website
+ *
+ * @copyright Copyright (c) 2020+ CrowdSec
+ * @license   MIT License
+ */
 class AcquisitionType extends AbstractType
 {
+    /**
+     * @throws Exception
+     * @throws \LogicException
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $helper = new Helper();
@@ -37,7 +41,7 @@ class AcquisitionType extends AbstractType
         $acquisitionConfig = new Config($version);
 
         $request = Request::createFromGlobals();
-        $hasId = $request->get('id');
+        $hasId = $request->query->get('id');
 
         $builder->add(
             'filepath',
@@ -80,32 +84,34 @@ class AcquisitionType extends AbstractType
 
     private function handleConfig(string $name, array $config): array
     {
+        $configValues = $config['values'] ?? [];
+
         return 'map' !== $config['type'] ?
             [$this->handleSingleConfig($name, $config)] :
-            array_map(function ($valueName, $data) use ($name) {
+            array_map(function ($valueName, array $data) use ($name) {
                 return $this->handleSingleConfig($valueName, $data, $name . '_');
-            }, array_keys($config['values']), $config['values']);
+            }, array_keys($configValues), $configValues);
     }
 
     private function handleSingleConfig(string $name, array $config, string $prefix = ''): array
     {
         $typeHandlers = [
-            'string' => function () {
+            'string' => function (): array {
                 return ['class' => TextType::class];
             },
-            'array' => function () {
+            'array' => function (): array {
                 return ['class' => TextareaType::class];
             },
-            'enum' => function () use ($config) {
+            'enum' => function () use ($config): array {
                 return [
                     'class' => ChoiceType::class,
                     'choices' => array_combine($config['values'], $config['values']),
                 ];
             },
-            'integer' => function () {
+            'integer' => function (): array {
                 return ['class' => IntegerType::class];
             },
-            'boolean' => function () {
+            'boolean' => function (): array {
                 return [
                     'class' => ChoiceType::class,
                     'choices' => array_combine(['true', 'false'], ['true', 'false']),

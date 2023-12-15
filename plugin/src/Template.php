@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace CrowdSec\Whm;
 
-use CrowdSec\Whm\Helper\Data as Helper;
 use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
-use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormRenderer;
 use Symfony\Component\Form\Forms;
+use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -31,10 +31,8 @@ use Twig\TemplateWrapper;
  */
 class Template
 {
-    /** @var Form */
+    /** @var FormInterface|null */
     private $form;
-    /** @var Helper */
-    private $helper;
     /** @var TemplateWrapper */
     private $template;
 
@@ -42,6 +40,8 @@ class Template
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
+     * @throws \LogicException
+     * @throws InvalidOptionsException
      */
     public function __construct(
         string $path,
@@ -50,7 +50,6 @@ class Template
         string $templatesDir = Constants::TEMPLATES_DIR,
         array $options = []
     ) {
-        $this->helper = new Helper();
         $loader = new FilesystemLoader($templatesDir);
         // $options['debug'] = true;
         $twig = new Environment($loader, $options);
@@ -74,11 +73,14 @@ class Template
         $this->template = $twig->load($path);
     }
 
-    public function getForm()
+    public function getForm(): ?FormInterface
     {
         return $this->form;
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function render(array $config = []): string
     {
         $defaultConfig = ['cpSession' => getenv('cp_security_token')];

@@ -28,6 +28,9 @@ class YamlCollection
      */
     private $items;
 
+    /**
+     * @throws \RuntimeException
+     */
     public function __construct()
     {
         $this->helper = new Helper();
