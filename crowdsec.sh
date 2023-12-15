@@ -49,7 +49,7 @@ uninstall () {
 }
 
 case $1 in
-  install|update)
+  install)
     echo "Installing CrowdSec plugin..."
     install
     ;;
