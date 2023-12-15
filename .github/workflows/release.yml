@@ -50,32 +50,35 @@ jobs:
         run: |
           
           # Check top wget GITHUB_URL/archive/refs/tags/vVERSION_NUMBER.tar.gz
-          DOC_TAR_VERSION=$(grep -o -E "wget GITHUB_URL/archive/refs/tags/vVERSION_NUMBER.tar.gz"  docs/INSTALLATION_GUIDE.md | head -1 | sed 's/ //g')
-          if [[ $DOC_TAR_VERSION == "wgetGITHUB_URL/archive/refs/tags/vVERSION_NUMBER.tar.gz" ]]
+          DOC_TAR_VERSION=$(grep -o -E "wget $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/archive/refs/tags/v${{ env.VERSION_NUMBER }}.tar.gz"  docs/INSTALLATION_GUIDE.md | head -1 | sed 's/ //g')
+          if [[ $DOC_TAR_VERSION == "wget$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/archive/refs/tags/v${{ env.VERSION_NUMBER }}.tar.gz" ]]
           then
               echo "DOC_TAR_VERSION OK"
           else
               echo "DOC_TAR_VERSION KO"
+              echo "$DOC_TAR_VERSION"
               exit 1
           fi
           
           # Check extract tar -xvf vVERSION_NUMBER.tar.gz
-          DOC_EXTRACT_VERSION=$(grep -o -E "tar -xvf vVERSION_NUMBER.tar.gz"  docs/INSTALLATION_GUIDE.md | head -1 | sed 's/ //g')
-          if [[ $DOC_EXTRACT_VERSION == "tar-xvfvVERSION_NUMBER.tar.gz" ]]
+          DOC_EXTRACT_VERSION=$(grep -o -E "tar -xvf v${{ env.VERSION_NUMBER }}.tar.gz"  docs/INSTALLATION_GUIDE.md | head -1 | sed 's/ //g')
+          if [[ $DOC_EXTRACT_VERSION == "tar-xvfv${{ env.VERSION_NUMBER }}.tar.gz" ]]
           then
               echo "DOC_EXTRACT_VERSION OK"
           else
               echo "DOC_EXTRACT_VERSION KO"
+              echo "$DOC_EXTRACT_VERSION"
               exit 1
           fi
           
           # Check cd whm-plugin-VERSION_NUMBER
-          DOC_CD_VERSION=$(grep -o -E "cd whm-plugin-VERSION_NUMBER"  docs/INSTALLATION_GUIDE.md | head -1 | sed 's/ //g')
-          if [[ $DOC_CD_VERSION == "cdwhm-plugin-VERSION_NUMBER" ]]
+          DOC_CD_VERSION=$(grep -o -E "cd cs-whm-plugin-${{ env.VERSION_NUMBER }}"  docs/INSTALLATION_GUIDE.md | head -1 | sed 's/ //g')
+          if [[ $DOC_CD_VERSION == "cdcs-whm-plugin-${{ env.VERSION_NUMBER }}" ]]
           then
               echo "DOC_CD_VERSION OK"
           else
               echo "DOC_CD_VERSION KO"
+              echo "$DOC_CD_VERSION"
               exit 1
           fi
           
