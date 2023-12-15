@@ -17,6 +17,7 @@
   - [Install the plugin](#install-the-plugin)
   - [Go back to your WHM dashboard](#go-back-to-your-whm-dashboard)
 - [Uninstallation](#uninstallation)
+- [Upgrade](#upgrade)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
