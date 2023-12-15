@@ -50,7 +50,7 @@ Then, you can download an archive of the sources (recommended) or clone the repo
 
 * Run the following command:
     * ```git clone git@github.com:crowdsecurity/cs-whm-plugin.git```
-    * ```cs-whm-plugin```
+    * ```cd cs-whm-plugin```
 
 
 ### Install the plugin
