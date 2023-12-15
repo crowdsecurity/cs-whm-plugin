@@ -17,7 +17,7 @@
       - [Development phase](#development-phase)
       - [Production release](#production-release)
     - [Coding standards](#coding-standards)
-    - [Unit test](#unit-test)
+      - [Unit test](#unit-test)
       - [PHPCS Fixer](#phpcs-fixer)
       - [PHPSTAN](#phpstan)
       - [PHP Mess Detector](#php-mess-detector)
