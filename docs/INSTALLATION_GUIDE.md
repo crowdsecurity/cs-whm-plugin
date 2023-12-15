@@ -39,30 +39,50 @@ Then, you can download an archive of the sources (recommended) or clone the repo
 #### Download a specific release archive (option 1)
 
 * Run the following command:
-    * ```wget https://github.com/crowdsecurity/cs-whm-plugin/archive/refs/tags/v0.0.1.tar.gz```
+
+```shell
+wget https://github.com/crowdsecurity/cs-whm-plugin/archive/refs/tags/v0.0.1.tar.gz
+```
+
 * Extract sources:
-    * ```tar -xvf v0.0.1.tar.gz``` 
+
+```shell
+tar -xvf v0.0.1.tar.gz
+``` 
+
 * Go to the extracted folder:
-    * ```cd cs-whm-plugin-0.0.1``` 
+
+```shell
+cd cs-whm-plugin-0.0.1
+``` 
 
 
 #### Clone the repository (option 2)
 
 * Run the following command:
-    * ```git clone git@github.com:crowdsecurity/cs-whm-plugin.git```
-    * ```cs-whm-plugin```
+
+```shell
+git clone git@github.com:crowdsecurity/cs-whm-plugin.git
+```
+```shell
+cd cs-whm-plugin
+```
 
 
 ### Install the plugin
 
-Once you've retrieved the sources, you can install the plugin.
-      
-* Run the `install` script as root
-    * ```sudo sh crowdsec.sh install```
-    * You should see:
-        * Installing CrowdSec plugin...
-        * crowdsec registered
+Once you've retrieved the sources, you can install the plugin by running the `install` script as root:
 
+```shell
+sudo sh crowdsec.sh install
+```
+    
+You should see:
+
+```
+Installing CrowdSec plugin...
+crowdsec registered
+```
 
 ### Go back to your WHM dashboard
 
@@ -72,10 +92,32 @@ CrowdSec should appear in the sidebar (in the bottom Plugins sections)
 
 ## Uninstallation
 
-To remove the plugin: 
+To remove the plugin, run the `uninstall` script as root:
 
-* Run the `uninstall` script as root
-    * ```sudo sh crowdsec.sh uninstall```
-    * You should see:
-        * Removing CrowdSec plugin...
-        * crowdsec unregistered
+
+```sudo sh crowdsec.sh uninstall```
+    
+You should see:
+
+```
+Uninstalling CrowdSec plugin...
+crowdsec unregistered
+```
+
+## Upgrade
+
+When a new version of the plugin is available, retrieve the new sources: 
+- download and decompress new release archive if you've chosen [option 1](#download-a-specific-release-archive-option-1).
+- `git pull` from the cloned repository if you've chosen [option 2](#clone-the-repository-option-2).
+
+Then, run the `reinstall` script as root
+
+* ```sudo sh crowdsec.sh reinstall```
+
+You should see:
+
+```
+Reinstalling CrowdSec plugin...
+crowdsec unregistered
+crowdsec registered
+```
