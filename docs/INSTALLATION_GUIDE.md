@@ -31,11 +31,12 @@
 
 ### Retrieve sources
 
-First, connect to your WHM server and go to your home directory.
+First, connect to your WHM server.
+Go to your home directory or in any directory that can be used to download the sources.
 
 Then, you can download an archive of the sources (recommended) or clone the repository.
 
-#### Download a specific release archive
+#### Download a specific release archive (option 1)
 
 * Run the following command:
     * ```wget https://github.com/crowdsecurity/cs-whm-plugin/archive/refs/tags/v0.0.1.tar.gz```
@@ -45,7 +46,7 @@ Then, you can download an archive of the sources (recommended) or clone the repo
     * ```cd cs-whm-plugin-0.0.1``` 
 
 
-#### Clone the repository
+#### Clone the repository (option 2)
 
 * Run the following command:
     * ```git clone git@github.com:crowdsecurity/cs-whm-plugin.git```
@@ -54,7 +55,7 @@ Then, you can download an archive of the sources (recommended) or clone the repo
 
 ### Install the plugin
 
-Once you retrieved the sources, you can install the plugin.
+Once you've retrieved the sources, you can install the plugin.
       
 * Run the `install` script as root
     * ```sudo sh crowdsec.sh install```
