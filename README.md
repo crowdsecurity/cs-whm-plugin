@@ -7,7 +7,7 @@
 [![Version](https://img.shields.io/github/v/release/crowdsecurity/cs-whm-plugin?include_prereleases)](https://github.com/crowdsecurity/cs-whm-plugin/releases/)
 [![Coding standards](https://github.com/crowdsecurity/cs-whm-plugin/actions/workflows/coding-standards.yml/badge.svg)
 ](https://github.com/crowdsecurity/cs-whm-plugin/actions/workflows/coding-standards.yml)
-[![Licence](https://img.shields.io/github/license/crowdsecurity/cs-whm-plugin)](https://github.com/crowdsecurity/cs-whm-plugin/blob/main/LICENSE)
+[![Licence](https://img.shields.io/badge/license-MIT-green)](https://github.com/crowdsecurity/cs-whm-plugin/blob/main/LICENSE)
 
 
 ## Installation
