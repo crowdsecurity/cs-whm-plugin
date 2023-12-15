@@ -5,7 +5,7 @@
 {% include('partials/navigation.html.twig') with {'cpSession': cpSession, 'active': 'acquisitions'} %}
 
 <script>
-    window.addEventListener("load", function (e) {
+    window.addEventListener("load", function () {
         CrowdSecAcquis.initList();
         CrowdSecServices.initServices();
     });
@@ -60,7 +60,19 @@
                                             {{ key }}:<br>
                                             {% for k,val in value %}
                                                 {% if key == 'filenames' %}
-                                                    {% if val in read_files %}
+
+                                                    {% set found = false %}
+                                                    {% for read_file in read_files %}
+                                                        {% if found %}
+                                                            {# Do nothing #}
+                                                        {% else %}
+                                                            {% if fnmatch(val, read_file) or read_file == val %}
+                                                                {% set found = true %}
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    {% endfor %}
+
+                                                    {% if found %}
                                                         {{ val }}
                                                     {% else %}
                                                         <div class="unread-file alert-{{ unread_warning_class }}">{{ val }}<i class="fa fa-exclamation-triangle"></i>
@@ -75,7 +87,18 @@
                                             {% endfor %}
                                         {% else %}
                                             {% if key == 'filename' %}
-                                                {% if value in read_files %}
+                                                {% set found = false %}
+                                                {% for read_file in read_files %}
+                                                    {% if found %}
+                                                        {# Do nothing #}
+                                                    {% else %}
+                                                        {% if fnmatch(value, read_file) or read_file == value %}
+                                                            {% set found = true %}
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endfor %}
+
+                                                {% if found %}
                                                     {{ key }}:{{ value }}
                                                 {% else %}
                                                     <div class="unread-file alert-{{ unread_warning_class }}">{{ key }}:{{ value }}<i class="fa fa-exclamation-triangle"></i>

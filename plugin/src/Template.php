@@ -18,6 +18,7 @@ use Twig\Error\SyntaxError;
 use Twig\Loader\FilesystemLoader;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
 use Twig\TemplateWrapper;
+use Twig\TwigFunction;
 
 /**
  * The template engine.
@@ -51,9 +52,9 @@ class Template
         array $options = []
     ) {
         $loader = new FilesystemLoader($templatesDir);
-        // $options['debug'] = true;
+        //$options['debug'] = true;
         $twig = new Environment($loader, $options);
-        // $twig->addExtension(new \Twig\Extension\DebugExtension());
+        //$twig->addExtension(new \Twig\Extension\DebugExtension());
         if (!empty($formTypeClass)) {
             $formFactory = Forms::createFormFactoryBuilder()->getFormFactory();
             $this->form = $formFactory->create($formTypeClass, $formTypeData);
@@ -69,6 +70,11 @@ class Template
         // @see https://symfony.com/doc/5.4/components/form.html#translation to implement translation
         // Required for bootstrap twig forms template
         $twig->addExtension(new TranslationExtension());
+
+        // Add function to check if a string matches a shell wildcard pattern
+        $twig->addFunction(new TwigFunction('fnmatch', function (string $pattern, string $string): bool {
+            return fnmatch($pattern, $string);
+        }));
 
         $this->template = $twig->load($path);
     }
