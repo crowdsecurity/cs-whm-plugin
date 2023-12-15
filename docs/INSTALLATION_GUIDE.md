@@ -7,7 +7,16 @@
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
 
+- [Requirements](#requirements)
+- [Installation](#installation)
+  - [Retrieve sources](#retrieve-sources)
+    - [Download a specific release archive](#download-a-specific-release-archive)
+    - [Clone the repository](#clone-the-repository)
+  - [Install the plugin](#install-the-plugin)
+  - [Go back to your WHM dashboard](#go-back-to-your-whm-dashboard)
+- [Uninstallation](#uninstallation)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 

@@ -6,6 +6,27 @@
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**
+
+- [Local development](#local-development)
+  - [DDEV setup](#ddev-setup)
+    - [DDEV installation](#ddev-installation)
+    - [Prepare DDEV PHP environment](#prepare-ddev-php-environment)
+  - [DDEV Usage](#ddev-usage)
+    - [Use composer to update or install the plugin dependencies](#use-composer-to-update-or-install-the-plugin-dependencies)
+      - [Development phase](#development-phase)
+      - [Production release](#production-release)
+    - [Coding standards](#coding-standards)
+    - [Unit test](#unit-test)
+      - [PHPCS Fixer](#phpcs-fixer)
+      - [PHPSTAN](#phpstan)
+      - [PHP Mess Detector](#php-mess-detector)
+      - [PHPCS and PHPCBF](#phpcs-and-phpcbf)
+      - [PSALM](#psalm)
+      - [PHP Unit Code coverage](#php-unit-code-coverage)
+- [Commit message](#commit-message)
+  - [Allowed message `type` values](#allowed-message-type-values)
+- [Release process](#release-process)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
