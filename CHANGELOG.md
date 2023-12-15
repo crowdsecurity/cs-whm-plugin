@@ -10,6 +10,6 @@ functions provided by the CrowdSec WHM plugin.
 
 ---
 
-## [0.0.1](https://github.com/crowdsecurity/cs-whm-plugin/releases/tag/v0.0.1) - 202?-??-??
+## [0.0.1](https://github.com/crowdsecurity/cs-whm-plugin/releases/tag/v0.0.1) - 2023-12-15
 
 - Initial release
