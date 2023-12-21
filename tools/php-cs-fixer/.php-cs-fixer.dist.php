@@ -1,6 +1,6 @@
 <?php
 
-if (!file_exists(__DIR__ . '/../../../src')) {
+if (!file_exists(__DIR__ . '/../../plugin/src')) {
     exit(1);
 }
 
@@ -21,8 +21,8 @@ return $config
     ->setRiskyAllowed(true)
     ->setFinder(
         PhpCsFixer\Finder::create()
-            ->in(__DIR__ . '/../../../src')
-            ->in(__DIR__ . '/../../../tests')
-            ->in(__DIR__ . '/../../../endpoints')
+            ->in(__DIR__ . '/../../plugin/src')
+            ->in(__DIR__ . '/../../tests')
+            ->in(__DIR__ . '/../../plugin/endpoints')
     )
 ;

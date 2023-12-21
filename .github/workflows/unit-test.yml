@@ -20,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: ['7.4','8.0','8.1','8.2','8.3']
+        php-version: ['7.2','7.3','7.4','8.0','8.1','8.2','8.3']
 
     name: Unit test
     runs-on: ubuntu-latest
@@ -61,12 +61,9 @@ jobs:
 
       - name: Install CrowdSec tool dependencies
         run: |
-          ddev composer update --working-dir=${{env.EXTENSION_PATH}}/plugin/tools/coding-standards 
+          ddev composer update --working-dir=${{env.EXTENSION_PATH}}/tools
 
       - name: Run Unit tests
-        if: |
-          github.event.inputs.unit_tests == 'true' ||
-          github.event_name == 'push'
-        run:  ddev php ./${{env.EXTENSION_PATH}}/plugin/tools/coding-standards/vendor/bin/phpunit --debug ./${{env.EXTENSION_PATH}}/plugin/tests/Unit --testdox
+        run:  ddev php ./${{env.EXTENSION_PATH}}/tools/vendor/bin/phpunit --debug ./${{env.EXTENSION_PATH}}/tests/Unit --testdox
 
 

@@ -26,22 +26,22 @@ install () {
   
 
   # Register the plugin with AppConfig.
-  /usr/local/cpanel/bin/register_appconfig ./plugin/crowdsec.conf
+  /usr/local/cpanel/bin/register_appconfig ./crowdsec.conf
     
   # Copy plugin files to their locations and update permissions.
-  /bin/cp -R ./plugin/endpoints /usr/local/cpanel/whostmgr/docroot/cgi/crowdsec
-  /bin/cp -R ./plugin/assets /usr/local/cpanel/whostmgr/docroot/cgi/crowdsec
-  /bin/cp -R ./plugin/src /usr/local/cpanel/whostmgr/docroot/cgi/crowdsec
-  /bin/cp -R ./plugin/vendor /usr/local/cpanel/whostmgr/docroot/cgi/crowdsec
+  /bin/cp -R ./endpoints /usr/local/cpanel/whostmgr/docroot/cgi/crowdsec
+  /bin/cp -R ./assets /usr/local/cpanel/whostmgr/docroot/cgi/crowdsec
+  /bin/cp -R ./src /usr/local/cpanel/whostmgr/docroot/cgi/crowdsec
+  /bin/cp -R ./vendor /usr/local/cpanel/whostmgr/docroot/cgi/crowdsec
   chmod -R 755 /usr/local/cpanel/whostmgr/docroot/cgi/crowdsec/*
 
-  /bin/cp ./plugin/cs_48.png /usr/local/cpanel/whostmgr/docroot/addon_plugins/crowdsec
+  /bin/cp ./cs_48.png /usr/local/cpanel/whostmgr/docroot/addon_plugins/crowdsec
   chmod 755 /usr/local/cpanel/whostmgr/docroot/addon_plugins/crowdsec/cs_48.png
 }
 
 uninstall () {
   # Unregister the plugin with AppConfig.
-  /usr/local/cpanel/bin/unregister_appconfig ./plugin/crowdsec.conf
+  /usr/local/cpanel/bin/unregister_appconfig ./crowdsec.conf
   
   # Remove plugin files.
   /bin/rm -rf /usr/local/cpanel/whostmgr/docroot/cgi/crowdsec

@@ -10,4 +10,4 @@ parameters:
     fileExtensions:
     		- php
     bootstrapFiles:
-        - ../../../vendor/autoload.php
+        - ../../plugin/vendor/autoload.php
