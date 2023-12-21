@@ -42,19 +42,19 @@ Then, you can download an archive of the sources (recommended) or clone the repo
 * Run the following command:
 
 ```shell
-wget https://github.com/crowdsecurity/cs-whm-plugin/archive/refs/tags/v0.0.2.tar.gz
+wget https://github.com/crowdsecurity/cs-whm-plugin/archive/refs/tags/v0.0.3.tar.gz
 ```
 
 * Extract sources:
 
 ```shell
-tar -xvf v0.0.2.tar.gz
+tar -xvf v0.0.3.tar.gz
 ``` 
 
 * Go to the extracted folder:
 
 ```shell
-cd cs-whm-plugin-0.0.2
+cd cs-whm-plugin-0.0.3/plugin
 ``` 
 
 
@@ -66,7 +66,7 @@ cd cs-whm-plugin-0.0.2
 git clone git@github.com:crowdsecurity/cs-whm-plugin.git
 ```
 ```shell
-cd cs-whm-plugin
+cd cs-whm-plugin/plugin
 ```
 
 

@@ -6,9 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/) and th
 ## SemVer public API
 
 The [public API](https://semver.org/spec/v2.0.0.html#spec-item-1)  for this project is defined by the set of 
-functions provided by the CrowdSec WHM plugin.
+functions provided by the plugin folder.
 
 ---
+
+## [0.0.3](https://github.com/crowdsecurity/cs-whm-plugin/releases/tag/v0.0.3) - 2023-12-21
+[_Compare with previous release_](https://github.com/crowdsecurity/cs-whm-plugin/compare/v0.0.2...v0.0.3)
+### Changed
+- Move `crowdsec.sh` script in `plugin` folder
+
+--- 
 
 ## [0.0.2](https://github.com/crowdsecurity/cs-whm-plugin/releases/tag/v0.0.2) - 2023-12-15
 [_Compare with previous release_](https://github.com/crowdsecurity/cs-whm-plugin/compare/v0.0.1...v0.0.2)
