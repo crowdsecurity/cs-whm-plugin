@@ -7,9 +7,9 @@
     xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
 >
     <projectFiles>
-        <directory name="../../../../endpoints" />
+        <directory name="../../../plugin/endpoints" />
         <ignoreFiles allowMissingFiles="true">
-            <directory name="../../../../vendor" />
+            <directory name="../../../plugin/vendor" />
             <directory name="../../vendor" />
             <file name="/usr/local/cpanel/php/WHM.php" />
         </ignoreFiles>

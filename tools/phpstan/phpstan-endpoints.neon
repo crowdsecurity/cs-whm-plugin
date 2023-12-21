@@ -1,6 +1,6 @@
 parameters:
     bootstrapFiles:
-        - ../../../vendor/autoload.php
+        - ../../plugin/vendor/autoload.php
     ignoreErrors:
         - '#Call to static method header\(\) on an unknown class WHM.#'
         - '#Call to static method footer\(\) on an unknown class WHM.#'

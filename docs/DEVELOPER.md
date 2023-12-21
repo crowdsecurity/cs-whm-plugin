@@ -127,20 +127,20 @@ ddev composer update --no-dev --prefer-dist --optimize-autoloader --working-dir 
 ```
 
 
-#### Coding standards
+#### Coding tools
 
-We set up some coding standards tools that you will find in the `tools/coding-standards` folder.
-In order to use these, you will need to work with a PHP version >= 7.4 and run first:
+We set up some coding tools that you will find in the `tools` folder.
+
 
 ```bash
-ddev composer update --working-dir=./my-code/whm-plugin/plugin/tools/coding-standards
+ddev composer update --working-dir=./my-code/whm-plugin/tools/
 ```
 
 
 ##### Unit test
 
 ```bash
-ddev php ./my-code/whm-plugin/plugin/tools/coding-standards/vendor/bin/phpunit  ./my-code/whm-plugin/plugin/tests/Unit --testdox
+ddev php ./my-code/whm-plugin/tools/vendor/bin/phpunit  ./my-code/whm-plugin/tests/Unit --testdox
 ```
 
 
@@ -148,7 +148,13 @@ ddev php ./my-code/whm-plugin/plugin/tools/coding-standards/vendor/bin/phpunit  
 
 We are using the [PHP Coding Standards Fixer](https://cs.symfony.com/)
 
-With ddev, you can do the following:
+In order to use these, you will need to work with a PHP version >= 7.4 and run first:
+  
+```bash
+ddev composer require friendsofphp/php-cs-fixer --working-dir=./my-code/whm-plugin/tools
+```
+
+To use it, you can run:
 
 
 ```bash
@@ -162,7 +168,7 @@ To use the [PHPSTAN](https://github.com/phpstan/phpstan) tool, you can run:
 
 
 ```bash
-ddev phpstan /var/www/html/my-code/whm-plugin/plugin/tools/coding-standards phpstan/phpstan.neon /var/www/html/my-code/whm-plugin/plugin/src
+ddev phpstan /var/www/html/my-code/whm-plugin/tools phpstan/phpstan.neon /var/www/html/my-code/whm-plugin/plugin/src
 
 ```
 
@@ -178,14 +184,14 @@ ddev phpstan /var/www/html/my-code/whm-plugin/plugin/tools/coding-standards phps
 To use the [PHPMD](https://github.com/phpmd/phpmd) tool, you can run:
 
 ```bash
-ddev phpmd ./my-code/whm-plugin/plugin/tools/coding-standards phpmd/rulesets.xml ../../src
+ddev phpmd ./my-code/whm-plugin/tools phpmd/rulesets.xml ../plugin/src
 
 ```
 
 or 
 
 ```bash
-ddev phpmd ./my-code/whm-plugin/plugin/tools/coding-standards phpmd/rulesets.xml ../../endpoints
+ddev phpmd ./my-code/whm-plugin/tools phpmd/rulesets.xml ../plugin/endpoints
 ```
 
 
@@ -194,26 +200,26 @@ ddev phpmd ./my-code/whm-plugin/plugin/tools/coding-standards phpmd/rulesets.xml
 To use [PHP Code Sniffer](https://github.com/squizlabs/PHP_CodeSniffer) tools, you can run:
 
 ```bash
-ddev phpcs ./my-code/whm-plugin/plugin/tools/coding-standards my-code/whm-plugin/plugin/src PSR12
+ddev phpcs ./my-code/whm-plugin/tools my-code/whm-plugin/plugin/src PSR12
 ```
 
 or 
 
 ```bash
-ddev phpcs ./my-code/whm-plugin/plugin/tools/coding-standards my-code/whm-plugin/plugin/endpoints PSR12
+ddev phpcs ./my-code/whm-plugin/tools my-code/whm-plugin/plugin/endpoints PSR12
 ```
 
 
 and:
 
 ```bash
-ddev phpcbf  ./my-code/whm-plugin/plugin/tools/coding-standards my-code/whm-plugin/plugin/src PSR12
+ddev phpcbf  ./my-code/whm-plugin/tools my-code/whm-plugin/plugin/src PSR12
 ```
 
 or
 
 ```bash
-ddev phpcbf  ./my-code/whm-plugin/plugin/tools/coding-standards my-code/whm-plugin/plugin/endpoints PSR12
+ddev phpcbf  ./my-code/whm-plugin/tools my-code/whm-plugin/plugin/endpoints PSR12
 ```
 
 ##### PSALM
@@ -221,13 +227,13 @@ ddev phpcbf  ./my-code/whm-plugin/plugin/tools/coding-standards my-code/whm-plug
 To use [PSALM](https://github.com/vimeo/psalm) tools, you can run:
 
 ```bash
-ddev psalm ./my-code/whm-plugin/plugin/tools/coding-standards ./my-code/whm-plugin/plugin/tools/coding-standards/psalm
+ddev psalm ./my-code/whm-plugin/tools ./my-code/whm-plugin/tools/psalm
 ```
 
 or
 
 ```bash
-ddev psalm ./my-code/whm-plugin/plugin/tools/coding-standards ./my-code/whm-plugin/plugin/tools/coding-standards/psalm/endpoints
+ddev psalm ./my-code/whm-plugin/tools ./my-code/whm-plugin/tools/psalm/endpoints
 ```
 
 ##### PHP Unit Code coverage
@@ -242,16 +248,16 @@ ddev xdebug
 
 To generate a html report, you can run:
 ```bash
-ddev php -dxdebug.mode=coverage ./my-code/whm-plugin/plugin/tools/coding-standards/vendor/bin/phpunit --configuration ./my-code/whm-plugin/plugin/tools/coding-standards/phpunit/phpunit.xml
+ddev php -dxdebug.mode=coverage ./my-code/whm-plugin/tools/vendor/bin/phpunit --configuration ./my-code/whm-plugin/tools/phpunit/phpunit.xml
 ```
 
-You should find the main report file `dashboard.html` in `tools/coding-standards/phpunit/code-coverage` folder.
+You should find the main report file `dashboard.html` in `tools/phpunit/code-coverage` folder.
 
 
 If you want to generate a text report in the same folder:
 
 ```bash
-ddev php -dxdebug.mode=coverage ./my-code/whm-plugin/plugin/tools/coding-standards/vendor/bin/phpunit --configuration ./my-code/whm-plugin/plugin/tools/coding-standards/phpunit/phpunit.xml --coverage-text=./my-code/whm-plugin/plugin/tools/coding-standards/phpunit/code-coverage/report.txt
+ddev php -dxdebug.mode=coverage ./my-code/whm-plugin/tools/vendor/bin/phpunit --configuration ./my-code/whm-plugin/tools/phpunit/phpunit.xml --coverage-text=./my-code/whm-plugin/tools/phpunit/code-coverage/report.txt
 ```
 
 ## Commit message
