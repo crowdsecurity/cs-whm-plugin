@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace CrowdSec\Whm\Helper;
 
 use CrowdSec\Whm\Acquisition\Config;
+use CrowdSec\Whm\Constants;
 use CrowdSec\Whm\Exception;
 use Symfony\Component\Yaml\Exception\DumpException;
 use Symfony\Component\Yaml\Exception\ParseException;
@@ -16,8 +17,6 @@ class Data
     private $acquisDir;
     private $acquisPath;
     private $configContent = [];
-    /** @TODO Have a plugin setting for this path */
-    private $configPath = '/etc/crowdsec/config.yaml';
     private $yamlAcquisitionByHash = [];
 
     /**
@@ -125,7 +124,8 @@ class Data
     {
         if (null === $this->acquisDir) {
             $config = $this->getConfig();
-            $this->acquisDir = \rtrim($config['crowdsec_service']['acquisition_dir'], '/') . '/';
+            $this->acquisDir =
+                \rtrim($config['crowdsec_service']['acquisition_dir'] ?? Constants::ACQUIS_DIR_DEFAULT, '/') . '/';
         }
 
         return $this->acquisDir;
@@ -165,7 +165,7 @@ class Data
     {
         if (null === $this->acquisPath) {
             $config = $this->getConfig();
-            $this->acquisPath = (string) $config['crowdsec_service']['acquisition_path'];
+            $this->acquisPath = (string)$config['crowdsec_service']['acquisition_path'];
         }
 
         return $this->acquisPath;
@@ -274,7 +274,7 @@ class Data
                 $yaml = "---\n" . $yaml;
             }
 
-            return (bool) file_put_contents($filepath, $yaml, $flags);
+            return (bool)file_put_contents($filepath, $yaml, $flags);
         } catch (DumpException $e) {
             $this->error('Unable to dump ' . $filepath . ': ' . $e->getMessage());
         } catch (\Exception $e) {
@@ -352,7 +352,7 @@ class Data
             case 'boolean':
                 return 'true' === $value;
             case 'integer':
-                return (int) $value;
+                return (int)$value;
             case 'array':
                 return explode(\PHP_EOL, $value);
             default:
@@ -363,7 +363,7 @@ class Data
     private function getConfig(): array
     {
         if (!$this->configContent) {
-            $this->configContent = $this->getYamlContent($this->configPath);
+            $this->configContent = $this->getYamlContent(Constants::CONFIG_PATH_DEFAULT);
         }
 
         return $this->configContent;

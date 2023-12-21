@@ -94,7 +94,7 @@
         "label": "Poll Without Inotify"
       }
     },
-    "journactl": {
+    "journalctl": {
       "journalctl_filter": {
         "type": "array",
         "label": "Journalctl Filter",
