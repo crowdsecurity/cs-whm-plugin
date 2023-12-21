@@ -79,7 +79,7 @@ jobs:
 
       - name: Run PSALM
         run: |
-          ddev psalm ./${{env.EXTENSION_PATH}}/tools /var/www/html/${{env.EXTENSION_PATH}}/plugin/tools/coding-standards/psalm
+          ddev psalm ./${{env.EXTENSION_PATH}}/tools /var/www/html/${{env.EXTENSION_PATH}}/tools/psalm
           ddev psalm ./${{env.EXTENSION_PATH}}/tools ./${{env.EXTENSION_PATH}}/tools/psalm/endpoints
 
       - name: Run PHPUNIT Code Coverage
