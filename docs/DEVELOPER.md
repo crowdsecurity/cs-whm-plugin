@@ -151,14 +151,14 @@ We are using the [PHP Coding Standards Fixer](https://cs.symfony.com/)
 In order to use these, you will need to work with a PHP version >= 7.4 and run first:
   
 ```bash
-ddev composer require friendsofphp/php-cs-fixer --working-dir=./my-code/whm-plugin/tools
+ddev exec COMPOSER=composer74.json composer update --working-dir ./my-code/whm-plugin/tools
 ```
 
 To use it, you can run:
 
 
 ```bash
-ddev phpcsfixer my-code/whm-plugin/plugin/tools/coding-standards/php-cs-fixer ../
+ddev phpcsfixer my-code/whm-plugin/tools/php-cs-fixer ../
 
 ```
 

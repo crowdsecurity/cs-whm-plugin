@@ -52,9 +52,9 @@ class Template
         array $options = []
     ) {
         $loader = new FilesystemLoader($templatesDir);
-        //$options['debug'] = true;
+        // $options['debug'] = true;
         $twig = new Environment($loader, $options);
-        //$twig->addExtension(new \Twig\Extension\DebugExtension());
+        // $twig->addExtension(new \Twig\Extension\DebugExtension());
         if (!empty($formTypeClass)) {
             $formFactory = Forms::createFormFactoryBuilder()->getFormFactory();
             $this->form = $formFactory->create($formTypeClass, $formTypeData);
