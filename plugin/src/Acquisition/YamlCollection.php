@@ -19,7 +19,6 @@ use CrowdSec\Whm\Helper\Yaml;
  */
 class YamlCollection
 {
-
     /**
      * @var array
      */

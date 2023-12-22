@@ -129,6 +129,4 @@ class AcquisitionType extends AbstractType
 
         return $result;
     }
-
-
 }

@@ -6,7 +6,6 @@ namespace CrowdSec\Whm\Helper;
 
 class Data
 {
-
     public function error(string $message): void
     {
         error_log('[CrowdSec Plugin log] ' . $message);
@@ -34,6 +33,4 @@ class Data
 
         return \hash('sha256', json_encode($array));
     }
-
-
 }
