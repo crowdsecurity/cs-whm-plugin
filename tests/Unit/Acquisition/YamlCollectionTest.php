@@ -2,14 +2,12 @@
 
 declare(strict_types=1);
 
-namespace CrowdSec\Whm\Tests\Unit;
+namespace CrowdSec\Whm\Tests\Unit\Acquisition;
 
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\TestCase;
 use CrowdSec\Whm\Acquisition\YamlCollection;
-use CrowdSec\Whm\Exception;
-use CrowdSec\Whm\Tests\UnitPHPUnitUtil;
 
 final class YamlCollectionTest extends TestCase
 {
@@ -24,13 +22,13 @@ final class YamlCollectionTest extends TestCase
         putenv('CROWDSEC_CONFIG_PATH=vfs://etc/crowdsec/config.yaml');
         $this->root = vfsStream::setup('/etc');
         $crowdsecDirectory = vfsStream::newDirectory('crowdsec')->at($this->root);
-        $configContent = file_get_contents(__DIR__ . '/MockedData/etc/crowdsec/config.yaml');
+        $configContent = file_get_contents(__DIR__ . '../../../MockedData/etc/crowdsec/config.yaml');
 
         vfsStream::newFile('config.yaml')
             ->at($crowdsecDirectory)
             ->setContent($configContent);
 
-        $acquisitionContent = file_get_contents(__DIR__ . '/MockedData/etc/crowdsec/acquis.yaml');
+        $acquisitionContent = file_get_contents(__DIR__ . '../../../MockedData/etc/crowdsec/acquis.yaml');
 
         vfsStream::newFile('acquis.yaml')
             ->at($crowdsecDirectory)
@@ -38,15 +36,11 @@ final class YamlCollectionTest extends TestCase
 
 
         $acquisCustomDir = vfsStream::newDirectory('acquis.d')->at($crowdsecDirectory);
-        $acquisitionContent = file_get_contents(__DIR__ . '/MockedData/etc/crowdsec/acquis.d/test.yaml');
+        $acquisitionContent = file_get_contents(__DIR__ . '../../../MockedData/etc/crowdsec/acquis.d/test.yaml');
 
         vfsStream::newFile('test.yaml')
             ->at($acquisCustomDir)
             ->setContent($acquisitionContent);
-
-
-        error_log($acquisCustomDir->url());
-
 
     }
 

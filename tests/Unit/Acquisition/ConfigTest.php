@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace CrowdSec\Whm\Tests\Unit;
+namespace CrowdSec\Whm\Tests\Unit\Acquisition;
 
 use PHPUnit\Framework\TestCase;
 use CrowdSec\Whm\Acquisition\Config;
 use CrowdSec\Whm\Exception;
-use CrowdSec\Whm\Tests\UnitPHPUnitUtil;
+use CrowdSec\Whm\Tests\PHPUnitUtil;
 
 final class ConfigTest extends TestCase
 {

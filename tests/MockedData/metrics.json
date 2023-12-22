@@ -1,0 +1,225 @@
+{
+  "acquisition": {
+    "file:/var/log/messages": {
+      "reads": 3395,
+      "unparsed": 3395
+    },
+    "file:/var/log/secure": {
+      "reads": 1071,
+      "unparsed": 1071
+    },
+    "journalctl:journalctl-_SYSTEMD_UNIT=mysql.service": {
+      "reads": 1,
+      "unparsed": 1
+    }
+  },
+  "alerts": {},
+  "buckets": {},
+  "decisions": {
+    "crowdsecurity/CVE-2019-18935": {
+      "CAPI": {
+        "ban": 20
+      }
+    },
+    "crowdsecurity/CVE-2022-26134": {
+      "CAPI": {
+        "ban": 54
+      }
+    },
+    "crowdsecurity/CVE-2022-35914": {
+      "CAPI": {
+        "ban": 15
+      }
+    },
+    "crowdsecurity/CVE-2022-37042": {
+      "CAPI": {
+        "ban": 5
+      }
+    },
+    "crowdsecurity/CVE-2022-41082": {
+      "CAPI": {
+        "ban": 61
+      }
+    },
+    "crowdsecurity/CVE-2022-42889": {
+      "CAPI": {
+        "ban": 1
+      }
+    },
+    "crowdsecurity/CVE-2023-22515": {
+      "CAPI": {
+        "ban": 6
+      }
+    },
+    "crowdsecurity/apache_log4j2_cve-2021-44228": {
+      "CAPI": {
+        "ban": 90
+      }
+    },
+    "crowdsecurity/f5-big-ip-cve-2020-5902": {
+      "CAPI": {
+        "ban": 5
+      }
+    },
+    "crowdsecurity/fortinet-cve-2018-13379": {
+      "CAPI": {
+        "ban": 21
+      }
+    },
+    "crowdsecurity/grafana-cve-2021-43798": {
+      "CAPI": {
+        "ban": 18
+      }
+    },
+    "crowdsecurity/http-backdoors-attempts": {
+      "CAPI": {
+        "ban": 561
+      }
+    },
+    "crowdsecurity/http-bad-user-agent": {
+      "CAPI": {
+        "ban": 3408
+      }
+    },
+    "crowdsecurity/http-crawl-non_statics": {
+      "CAPI": {
+        "ban": 193
+      }
+    },
+    "crowdsecurity/http-cve-2021-41773": {
+      "CAPI": {
+        "ban": 6
+      }
+    },
+    "crowdsecurity/http-cve-2021-42013": {
+      "CAPI": {
+        "ban": 1
+      }
+    },
+    "crowdsecurity/http-generic-bf": {
+      "CAPI": {
+        "ban": 1
+      }
+    },
+    "crowdsecurity/http-open-proxy": {
+      "CAPI": {
+        "ban": 173
+      }
+    },
+    "crowdsecurity/http-path-traversal-probing": {
+      "CAPI": {
+        "ban": 46
+      }
+    },
+    "crowdsecurity/http-probing": {
+      "CAPI": {
+        "ban": 380
+      }
+    },
+    "crowdsecurity/http-sensitive-files": {
+      "CAPI": {
+        "ban": 2
+      }
+    },
+    "crowdsecurity/jira_cve-2021-26086": {
+      "CAPI": {
+        "ban": 5
+      }
+    },
+    "crowdsecurity/mysql-bf": {
+      "CAPI": {
+        "ban": 3
+      }
+    },
+    "crowdsecurity/netgear_rce": {
+      "CAPI": {
+        "ban": 1
+      }
+    },
+    "crowdsecurity/ssh-bf": {
+      "CAPI": {
+        "ban": 4110
+      }
+    },
+    "crowdsecurity/ssh-slow-bf": {
+      "CAPI": {
+        "ban": 11
+      }
+    },
+    "crowdsecurity/thinkphp-cve-2018-20062": {
+      "CAPI": {
+        "ban": 5
+      }
+    },
+    "ltsich/http-w00tw00t": {
+      "CAPI": {
+        "ban": 1
+      }
+    }
+  },
+  "lapi": {
+    "/v1/decisions/stream": {
+      "GET": 1453
+    },
+    "/v1/heartbeat": {
+      "GET": 242
+    },
+    "/v1/watchers/login": {
+      "POST": 5
+    }
+  },
+  "lapi_bouncer": {
+    "cs-firewall-bouncer-1696495768": {
+      "/v1/decisions/stream": {
+        "GET": 1453
+      }
+    }
+  },
+  "lapi_decisions": {},
+  "lapi_machine": {
+    "28b62a4f28ae42a9bd5a2da13641f3328ChM7LVeDFADGhYN": {
+      "/v1/heartbeat": {
+        "GET": 242
+      }
+    }
+  },
+  "parsers": {
+    "child-crowdsecurity/apache2-logs": {
+      "hits": 1426,
+      "unparsed": 1426
+    },
+    "child-crowdsecurity/mysql-logs": {
+      "hits": 2,
+      "unparsed": 2
+    },
+    "child-crowdsecurity/sshd-logs": {
+      "hits": 22,
+      "unparsed": 22
+    },
+    "child-crowdsecurity/syslog-logs": {
+      "hits": 3753,
+      "parsed": 3753
+    },
+    "crowdsecurity/apache2-logs": {
+      "hits": 713,
+      "unparsed": 713
+    },
+    "crowdsecurity/mysql-logs": {
+      "hits": 1,
+      "unparsed": 1
+    },
+    "crowdsecurity/non-syslog": {
+      "hits": 714,
+      "parsed": 714
+    },
+    "crowdsecurity/sshd-logs": {
+      "hits": 2,
+      "unparsed": 2
+    },
+    "crowdsecurity/syslog-logs": {
+      "hits": 3753,
+      "parsed": 3753
+    }
+  },
+  "stash": {}
+}

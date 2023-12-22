@@ -25,7 +25,6 @@ use org\bovigo\vfs\vfsStreamDirectory;
 final class TemplateTest extends TestCase
 {
 
-
     /**
      * @var vfsStreamDirectory
      */
@@ -37,7 +36,7 @@ final class TemplateTest extends TestCase
         putenv('CROWDSEC_CONFIG_PATH=vfs://etc/crowdsec/config.yaml');
         $this->root = vfsStream::setup('/etc');
         $crowdsecDirectory = vfsStream::newDirectory('crowdsec')->at($this->root);
-        $configContent = file_get_contents(__DIR__ . '/MockedData/etc/crowdsec/config.yaml');
+        $configContent = file_get_contents(__DIR__ . '../../MockedData/etc/crowdsec/config.yaml');
 
         vfsStream::newFile('config.yaml')
             ->at($crowdsecDirectory)

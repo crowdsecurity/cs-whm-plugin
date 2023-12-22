@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @license   MIT License
  */
 
-namespace CrowdSec\Whm\Tests\Unit;
+namespace CrowdSec\Whm\Tests;
 
 use PHPUnit\Runner\Version;
 

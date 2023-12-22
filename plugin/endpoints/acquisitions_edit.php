@@ -9,7 +9,7 @@ use CrowdSec\Whm\Acquisition\YamlCollection;
 use CrowdSec\Whm\Constants;
 use CrowdSec\Whm\Exception;
 use CrowdSec\Whm\Form\AcquisitionType;
-use CrowdSec\Whm\Helper\Data as Helper;
+use CrowdSec\Whm\Helper\Yaml;
 use CrowdSec\Whm\Helper\Shell;
 use CrowdSec\Whm\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -21,16 +21,16 @@ $request = Request::createFromGlobals();
 $session = new Session();
 $session->start();
 $flashes = $session->getFlashBag();
-$helper = new Helper();
+$yaml = new Yaml();
 $shell = new Shell();
 $currentHash = (string) $request->query->get('id');
 
 $formData = [];
 $yamlAcquisition = false;
 if ($currentHash) {
-    $yamlAcquisition = $helper->getYamlAcquisitionByHash($currentHash);
+    $yamlAcquisition = $yaml->getYamlAcquisitionByHash($currentHash);
 
-    $formData = $helper->convertYamlToForm($yamlAcquisition);
+    $formData = $yaml->convertYamlToForm($yamlAcquisition);
 }
 $template = new Template('acquisitions-edit.html.twig', AcquisitionType::class, $formData);
 
@@ -44,15 +44,15 @@ if ($form->isSubmitted()) {
     $success = false;
     $formData = array_reverse($form->getData(), true);
 
-    $newData = $helper->convertFormToYaml($formData);
+    $newData = $yaml->convertFormToYaml($formData);
 
-    $newHash = $helper->hash($newData);
+    $newHash = $yaml->hash($newData);
     $responseParam = '?id=' . $newHash;
 
     $hashToCompare = $currentHash ?: $newHash;
 
     $newDataFilepath = $newData['filepath'];
-    $savedResult = $helper->upsertYamlAcquisitionByHash($hashToCompare, $newDataFilepath, $newData);
+    $savedResult = $yaml->upsertYamlAcquisitionByHash($hashToCompare, $newDataFilepath, $newData);
 
     if ($savedResult) {
         $success = true;
@@ -60,10 +60,10 @@ if ($form->isSubmitted()) {
             $shell->checkConfig();
         } catch (Exception $e) {
             if (!$currentHash) {
-                $helper->deleteYamlAcquisitionByHash($newHash, true);
+                $yaml->deleteYamlAcquisitionByHash($newHash, true);
             } else {
                 $oldFilepath = $yamlAcquisition['filepath'];
-                $helper->upsertYamlAcquisitionByHash($newHash, $oldFilepath, $yamlAcquisition);
+                $yaml->upsertYamlAcquisitionByHash($newHash, $oldFilepath, $yamlAcquisition);
 
                 $responseParam = '?id=' . $currentHash;
             }
