@@ -175,7 +175,7 @@ ddev phpstan /var/www/html/my-code/whm-plugin/tools phpstan/phpstan.neon /var/ww
 or 
 
 ```bash
-ddev phpstan /var/www/html/my-code/whm-plugin/plugin/tools/coding-standards phpstan/phpstan-endpoints.neon /var/www/html/my-code/whm-plugin/plugin/endpoints
+ddev phpstan /var/www/html/my-code/whm-plugin/tools phpstan/phpstan-endpoints.neon /var/www/html/my-code/whm-plugin/plugin/endpoints
 ```
 
 

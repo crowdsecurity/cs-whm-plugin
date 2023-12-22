@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CrowdSec\Whm\Acquisition;
 
-use CrowdSec\Whm\Helper\Data as Helper;
+use CrowdSec\Whm\Helper\Yaml;
 
 /**
  * The acquisition collection class.
@@ -20,10 +20,6 @@ use CrowdSec\Whm\Helper\Data as Helper;
 class YamlCollection
 {
     /**
-     * @var Helper
-     */
-    private $helper;
-    /**
      * @var array
      */
     private $items;
@@ -33,12 +29,12 @@ class YamlCollection
      */
     public function __construct()
     {
-        $this->helper = new Helper();
+        $yaml = new Yaml();
         $this->items = [];
-        $yamlAcquisitions = $this->helper->getAcquisFromYamls();
+        $yamlAcquisitions = $yaml->getAcquisFromYamls();
 
         foreach ($yamlAcquisitions as $yamlAcquisition) {
-            $hash = $this->helper->hash($yamlAcquisition);
+            $hash = $yaml->hash($yamlAcquisition);
 
             $this->items[$hash] = $yamlAcquisition;
         }

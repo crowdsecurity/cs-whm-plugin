@@ -6,7 +6,7 @@ namespace CrowdSec\Whm\Helper;
 
 use CrowdSec\Whm\Exception;
 
-class Shell extends Data
+class Shell extends Yaml
 {
     public const NO_EXEC_FUNC = 'no_exec_func';
     private $commandWhitelist = [
@@ -73,9 +73,6 @@ class Shell extends Data
 
     public function getLastRestartSince(): int
     {
-        error_log('getLastRestartSince' . $this->getLastRestart());
-        error_log('TIME' . time());
-
         return time() - $this->getLastRestart();
     }
 
@@ -95,6 +92,29 @@ class Shell extends Data
     public function hasNoExecFunc(): bool
     {
         return self::NO_EXEC_FUNC === $this->getExecFunc();
+    }
+
+    protected function getExecFunc(): string
+    {
+        if (null === $this->execFunc) {
+            $result = self::NO_EXEC_FUNC;
+            /**
+             * @see https://www.php.net/manual/en/function.system.php
+             * @see https://www.php.net/manual/en/function.passthru.php
+             * @see https://www.php.net/manual/en/function.exec.php
+             */
+            $functions = ['system', 'passthru', 'exec'];
+            foreach ($functions as $func) {
+                if (function_exists($func)) {
+                    $result = $func;
+                    break;
+                }
+            }
+
+            $this->execFunc = $result;
+        }
+
+        return $this->execFunc;
     }
 
     private function escapeShellCmd(string $command): string
@@ -118,29 +138,6 @@ class Shell extends Data
         $metrics = $this->getMetrics();
 
         return $metrics['acquisition'] ?? [];
-    }
-
-    private function getExecFunc(): string
-    {
-        if (null === $this->execFunc) {
-            $result = self::NO_EXEC_FUNC;
-            /**
-             * @see https://www.php.net/manual/en/function.system.php
-             * @see https://www.php.net/manual/en/function.passthru.php
-             * @see https://www.php.net/manual/en/function.exec.php
-             */
-            $functions = ['system', 'passthru', 'exec'];
-            foreach ($functions as $func) {
-                if (function_exists($func)) {
-                    $result = $func;
-                    break;
-                }
-            }
-
-            $this->execFunc = $result;
-        }
-
-        return $this->execFunc;
     }
 
     private function getLastRestart(): int

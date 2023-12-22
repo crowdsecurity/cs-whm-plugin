@@ -6,7 +6,7 @@ namespace CrowdSec\Whm\Form;
 
 use CrowdSec\Whm\Acquisition\Config;
 use CrowdSec\Whm\Exception;
-use CrowdSec\Whm\Helper\Data as Helper;
+use CrowdSec\Whm\Helper\Yaml;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -35,9 +35,9 @@ class AcquisitionType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $helper = new Helper();
+        $yaml = new Yaml();
 
-        $version = $helper->getAcquisitionVersion();
+        $version = $yaml->getAcquisitionVersion();
         $acquisitionConfig = new Config($version);
 
         $request = Request::createFromGlobals();
@@ -48,7 +48,7 @@ class AcquisitionType extends AbstractType
             $hasId ? HiddenType::class : TextType::class,
             array_merge(
                 ['label' => 'Acquisition file path'],
-                $hasId ? [] : ['required' => true, 'help' => 'Relative path to ' . $helper->getAcquisDir()]
+                $hasId ? [] : ['required' => true, 'help' => 'Relative path to ' . $yaml->getAcquisDir()]
             )
         );
 

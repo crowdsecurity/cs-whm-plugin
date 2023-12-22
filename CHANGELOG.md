@@ -10,6 +10,20 @@ functions provided by the plugin folder.
 
 ---
 
+
+## [0.0.5](https://github.com/crowdsecurity/cs-whm-plugin/releases/tag/v0.0.5) - 2023-12-22
+[_Compare with previous release_](https://github.com/crowdsecurity/cs-whm-plugin/compare/v0.0.4...v0.0.5)
+
+### Added
+- Add `CROWDSEC_CONFIG_PATH` environment variable to specify the path of the CrowdSec configuration file
+
+### Removed
+
+- Remove non functional delete button in decision list
+
+--- 
+
+
 ## [0.0.4](https://github.com/crowdsecurity/cs-whm-plugin/releases/tag/v0.0.4) - 2023-12-21
 [_Compare with previous release_](https://github.com/crowdsecurity/cs-whm-plugin/compare/v0.0.3...v0.0.4)
 ### Changed
@@ -20,6 +34,7 @@ functions provided by the plugin folder.
 
 ## [0.0.3](https://github.com/crowdsecurity/cs-whm-plugin/releases/tag/v0.0.3) - 2023-12-21
 [_Compare with previous release_](https://github.com/crowdsecurity/cs-whm-plugin/compare/v0.0.2...v0.0.3)
+
 ### Changed
 - Move `crowdsec.sh` script in `plugin` folder
 

@@ -1,0 +1,25 @@
+#Generated acquisition file - wizard.sh (service: apache2) / files : /var/log/apache2/modsec_audit.log /var/log/apache2/modsec_debug.log
+filenames:
+  - /var/log/apache2/modsec_audit.log
+  - /var/log/apache2/modsec_debug.log
+labels:
+  type: apache2
+---
+#Generated acquisition file - wizard.sh (service: sshd) / files : /var/log/secure
+filenames:
+  - /var/log/secure
+labels:
+  type: syslog
+---
+#Generated acquisition file - wizard.sh (service: mysql) / files :
+journalctl_filter:
+  - _SYSTEMD_UNIT=mysql.service
+labels:
+  type: mysql
+---
+#Generated acquisition file - wizard.sh (service: linux) / files : /var/log/anaconda/syslog /var/log/messages
+filenames:
+  - /var/log/anaconda/syslog
+  - /var/log/messages
+labels:
+  type: syslog

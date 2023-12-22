@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 require_once '../vendor/autoload.php';
 
-use CrowdSec\Whm\Helper\Shell as Helper;
+use CrowdSec\Whm\Helper\Shell;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 $session = new Session();
 $session->start();
 
-$helper = new Helper();
+$shell = new Shell();
 $default = '[]';
 $method = $_SERVER['REQUEST_METHOD'] ?? '';
 if ('POST' === $method && isset($_POST['action'])) {
@@ -18,39 +18,39 @@ if ('POST' === $method && isset($_POST['action'])) {
 
     switch ($action) {
         case 'status-alerts-list':
-            echo $helper->exec('cscli alerts list -l 0 -o json')['output'];
+            echo $shell->exec('cscli alerts list -l 0 -o json')['output'];
 
             break;
         case 'status-bouncers-list':
-            echo $helper->exec('cscli bouncers list -o json')['output'];
+            echo $shell->exec('cscli bouncers list -o json')['output'];
 
             break;
         case 'status-collections-list':
-            echo $helper->exec('cscli collections list -o json')['output'];
+            echo $shell->exec('cscli collections list -o json')['output'];
 
             break;
         case 'status-decisions-list':
-            echo $helper->exec('cscli decisions list -l 0 -o json')['output'];
+            echo $shell->exec('cscli decisions list -l 0 -o json')['output'];
 
             break;
         case 'status-machines-list':
-            echo $helper->exec('cscli machines list -o json')['output'];
+            echo $shell->exec('cscli machines list -o json')['output'];
 
             break;
         case 'status-parsers-list':
-            echo $helper->exec('cscli parsers list -o json')['output'];
+            echo $shell->exec('cscli parsers list -o json')['output'];
 
             break;
         case 'status-postoverflows-list':
-            echo $helper->exec('cscli postoverflows list -o json')['output'];
+            echo $shell->exec('cscli postoverflows list -o json')['output'];
 
             break;
         case 'status-scenarios-list':
-            echo $helper->exec('cscli scenarios list -o json')['output'];
+            echo $shell->exec('cscli scenarios list -o json')['output'];
 
             break;
         case 'services-status':
-            $status = trim($helper->exec('systemctl is-active crowdsec')['output']);
+            $status = trim($shell->exec('systemctl is-active crowdsec')['output']);
             $result = 'active' === $status ? 'running' : 'not running';
             echo json_encode(
                 [
@@ -67,7 +67,7 @@ if ('POST' === $method && isset($_POST['action'])) {
         case 'metrics-lapi-list':
         case 'metrics-lapi-bouncers-list':
         case 'metrics-decisions-list':
-            echo $helper->exec('cscli metrics -o json')['output'];
+            echo $shell->exec('cscli metrics -o json')['output'];
 
             break;
 
@@ -78,7 +78,7 @@ if ('POST' === $method && isset($_POST['action'])) {
                 $result['error'] = 'Acquisition Id is required';
             }
 
-            if ($helper->deleteYamlAcquisitionByHash($acquisId)) {
+            if ($shell->deleteYamlAcquisitionByHash($acquisId)) {
                 $result['success'] = true;
                 unset($result['error']);
                 $session->set('crowdsec_restart_needed', true);
@@ -88,7 +88,7 @@ if ('POST' === $method && isset($_POST['action'])) {
             break;
 
         case 'crowdsec-restart':
-            $restart = $helper->exec('systemctl restart crowdsec')['return_code'];
+            $restart = $shell->exec('systemctl restart crowdsec')['return_code'];
             $result = ['error' => 'Something went wrong while restarting service'];
             if (0 === $restart) {
                 $result['success'] = true;

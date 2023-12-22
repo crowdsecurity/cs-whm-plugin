@@ -1,0 +1,13 @@
+source: file
+log_level: panic
+labels:
+  type: syslog
+filenames:
+  - /var/log/test.log
+---
+filenames:
+  - eeeeee
+log_level: trace
+labels:
+  type: syslog
+source: file
