@@ -363,7 +363,8 @@ class Data
     private function getConfig(): array
     {
         if (!$this->configContent) {
-            $this->configContent = $this->getYamlContent(Constants::CONFIG_PATH_DEFAULT);
+            $configPath = getenv('CROWDSEC_CONFIG_PATH') ?: Constants::CONFIG_PATH_DEFAULT;
+            $this->configContent = $this->getYamlContent($configPath);
         }
 
         return $this->configContent;
@@ -375,7 +376,14 @@ class Data
     private function getOverrideAcquisFiles(): array
     {
         $acquisDir = $this->getAcquisDir();
-        $foundFiles = glob($acquisDir . '*yaml');
+        $foundFiles = [];
+        $iterator = new \DirectoryIterator($acquisDir);
+        foreach ($iterator as $fileinfo) {
+            if ($fileinfo->isFile() && $fileinfo->getExtension() === 'yaml') {
+                $foundFiles[] = $fileinfo->getPathname();
+            }
+        }
+
         $acquisFiles = [];
 
         foreach ($foundFiles as $filePath) {

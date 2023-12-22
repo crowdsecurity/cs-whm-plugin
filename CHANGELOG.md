@@ -10,6 +10,15 @@ functions provided by the plugin folder.
 
 ---
 
+
+## [0.0.5](https://github.com/crowdsecurity/cs-whm-plugin/releases/tag/v0.0.5) - 2023-12-22
+[_Compare with previous release_](https://github.com/crowdsecurity/cs-whm-plugin/compare/v0.0.4...v0.0.5)
+### 
+- Add `CROWDSEC_CONFIG_PATH` environment variable to specify the path of the CrowdSec configuration file
+
+--- 
+
+
 ## [0.0.4](https://github.com/crowdsecurity/cs-whm-plugin/releases/tag/v0.0.4) - 2023-12-21
 [_Compare with previous release_](https://github.com/crowdsecurity/cs-whm-plugin/compare/v0.0.3...v0.0.4)
 ### Changed

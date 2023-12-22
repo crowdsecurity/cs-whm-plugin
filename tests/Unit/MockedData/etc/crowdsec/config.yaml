@@ -17,8 +17,8 @@ config_paths:
   plugin_dir: /usr/lib64/crowdsec/plugins/
 crowdsec_service:
   #console_context_path: /etc/crowdsec/console/context.yaml
-  acquisition_path: /etc/crowdsec/acquis.yaml
-  acquisition_dir: /etc/crowdsec/acquis.d
+  acquisition_path: vfs://etc/crowdsec/acquis.yaml
+  acquisition_dir: vfs://etc/crowdsec/acquis.d
   parser_routines: 1
 cscli:
   output: human
