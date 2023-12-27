@@ -36,11 +36,17 @@ final class YamlCollectionTest extends TestCase
 
 
         $acquisCustomDir = vfsStream::newDirectory('acquis.d')->at($crowdsecDirectory);
-        $acquisitionContent = file_get_contents(__DIR__ . '../../../MockedData/etc/crowdsec/acquis.d/test.yaml');
+        $acquisitionContentSimple = file_get_contents(__DIR__ . '../../../MockedData/etc/crowdsec/acquis.d/test-simple.yaml');
 
-        vfsStream::newFile('test.yaml')
+        vfsStream::newFile('test-simple.yaml')
             ->at($acquisCustomDir)
-            ->setContent($acquisitionContent);
+            ->setContent($acquisitionContentSimple);
+
+        $acquisitionContentMulti = file_get_contents(__DIR__ . '../../../MockedData/etc/crowdsec/acquis.d/test-multi.yaml');
+
+        vfsStream::newFile('test-multi.yaml')
+            ->at($acquisCustomDir)
+            ->setContent($acquisitionContentMulti);
 
     }
 
@@ -55,7 +61,7 @@ final class YamlCollectionTest extends TestCase
 
         $items = $yamlCollection->getItems();
 
-        $this->assertCount(6, $items);
+        $this->assertCount(7, $items);
 
 
         $expected = array (
@@ -109,7 +115,21 @@ final class YamlCollectionTest extends TestCase
                         ),
                     'filepath' => 'vfs://etc/crowdsec/acquis.yaml',
                 ),
-            '6b1a033678b52b968ce2eb2a4d9261e4a03ba410c093724ae50bdc03925125a4' =>
+            '58b22815f2c7a7ab252c6750dcb9df71ef0649fe46a6a3dab76eaa66ca51304e' =>
+                array (
+                    'source' => 'file',
+                    'log_level' => 'debug',
+                    'labels' =>
+                        array (
+                            'type' => 'syslog',
+                        ),
+                    'filenames' =>
+                        array (
+                            0 => '/var/log/test-simple.log',
+                        ),
+                    'filepath' => 'vfs://etc/crowdsec/acquis.d/test-simple.yaml',
+                ),
+            'b52f487524e87a6256ca3843e90fdb2151f83ebf4c03bcebc707354a6b1996a1' =>
                 array (
                     'source' => 'file',
                     'log_level' => 'panic',
@@ -121,9 +141,9 @@ final class YamlCollectionTest extends TestCase
                         array (
                             0 => '/var/log/test.log',
                         ),
-                    'filepath' => 'vfs://etc/crowdsec/acquis.d/test.yaml',
+                    'filepath' => 'vfs://etc/crowdsec/acquis.d/test-multi.yaml',
                 ),
-            '177b9f825a7a1b0ea751bbb4387aa9e0aa18e86d6664f22957b7b7a2f27ec06c' =>
+            'd74f4e07eba223bc5400d277d1c8ae96144a38eaaeceeb3219475aad8af13d45' =>
                 array (
                     'filenames' =>
                         array (
@@ -135,7 +155,7 @@ final class YamlCollectionTest extends TestCase
                             'type' => 'syslog',
                         ),
                     'source' => 'file',
-                    'filepath' => 'vfs://etc/crowdsec/acquis.d/test.yaml',
+                    'filepath' => 'vfs://etc/crowdsec/acquis.d/test-multi.yaml',
                 ),
         );
 

@@ -29,7 +29,6 @@ $formData = [];
 $yamlAcquisition = false;
 if ($currentHash) {
     $yamlAcquisition = $yaml->getYamlAcquisitionByHash($currentHash);
-
     $formData = $yaml->convertYamlToForm($yamlAcquisition);
 }
 $template = new Template('acquisitions-edit.html.twig', AcquisitionType::class, $formData);

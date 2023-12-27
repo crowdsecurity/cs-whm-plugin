@@ -1,0 +1,7 @@
+source: file
+log_level: debug
+labels:
+    type: syslog
+filenames:
+    - /var/log/test-simple.log
+

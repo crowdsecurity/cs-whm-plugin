@@ -37,11 +37,19 @@ final class YamlTest extends TestCase
             ->setContent($acquisitionContent);
 
         $acquisCustomDir = vfsStream::newDirectory('acquis.d')->at($crowdsecDirectory);
-        $acquisitionContent = file_get_contents(__DIR__ . '../../../MockedData/etc/crowdsec/acquis.d/test.yaml');
+        $acquisitionContentSimple =
+            file_get_contents(__DIR__ . '../../../MockedData/etc/crowdsec/acquis.d/test-simple.yaml');
 
-        vfsStream::newFile('test.yaml')
+        vfsStream::newFile('test-simple.yaml')
             ->at($acquisCustomDir)
-            ->setContent($acquisitionContent);
+            ->setContent($acquisitionContentSimple);
+
+        $acquisitionContentMulti =
+            file_get_contents(__DIR__ . '../../../MockedData/etc/crowdsec/acquis.d/test-multi.yaml');
+
+        vfsStream::newFile('test-multi.yaml')
+            ->at($acquisCustomDir)
+            ->setContent($acquisitionContentMulti);
     }
 
     protected function tearDown(): void
@@ -150,6 +158,206 @@ final class YamlTest extends TestCase
         ];
 
         $this->assertEquals($expexted, $result);
+    }
+
+    public function testConvertYamlToForm(): void
+    {
+        $yamlData = [
+            'name' => 'test_name',
+            'source' => 'file',
+            'log_level' => 'debug',
+            'max_buffer_size' => 250,
+            'force_inotify' => true,
+            'poll_without_inotify' => true,
+            'labels' => [
+                'type' => 'syslog',
+            ],
+
+            'filenames' => [
+                '0' => 'eeeeee'
+            ],
+
+            'filepath' => 'vfs://etc/crowdsec/acquis.d/test2.yaml',
+
+        ];
+
+        $yaml = new Yaml();
+        $result = $yaml->convertYamlToForm($yamlData);
+
+        $expexted = [
+            'filepath' => 'test2.yaml',
+            'file_filenames' => 'eeeeee',
+            'common_name' => 'test_name',
+            'common_labels_type' => 'syslog',
+            'file_force_inotify' => 'true',
+            'docker_force_inotify' => 'true',
+            'file_poll_without_inotify' => 'true',
+            'file_max_buffer_size' => 250,
+            's3_max_buffer_size' => 250,
+            'common_source' => 'file',
+            'common_log_level' => 'debug',
+
+        ];
+
+        $this->assertEquals($expexted, $result);
+    }
+
+    public function testDeleteSimpleYamlAcquisitionByHash()
+    {
+        $this->assertEquals(
+            true,
+            file_exists($this->root->url() . '/crowdsec/acquis.d/test-simple.yaml'),
+            'Yaml File should exist'
+        );
+
+        $yaml = new Yaml();
+        $yaml->deleteYamlAcquisitionByHash('58b22815f2c7a7ab252c6750dcb9df71ef0649fe46a6a3dab76eaa66ca51304e');//hash of test-simple.yaml
+
+        $this->assertEquals(
+            false,
+            file_exists($this->root->url() . '/crowdsec/acquis.d/test-simple.yaml'),
+            'Yaml File should not exist anymore'
+        );
+    }
+
+    public function testDeleteMultiYamlAcquisitionByHash()
+    {
+        $this->assertEquals(
+            true,
+            file_exists($this->root->url() . '/crowdsec/acquis.d/test-multi.yaml'),
+            'Yaml File should exist'
+        );
+
+        $yaml = new Yaml();
+        $hash = 'b52f487524e87a6256ca3843e90fdb2151f83ebf4c03bcebc707354a6b1996a1';//hash of test-multi.yaml
+
+        $acquis = $yaml->getYamlAcquisitionByHash($hash);
+
+        $allAcquis = $yaml->getAcquisFromYamls();
+
+        $this->assertEquals(
+            7,
+            count($allAcquis)
+        );
+
+        $expected = array(
+            'source' => 'file',
+            'log_level' => 'panic',
+            'labels' =>
+                array(
+                    'type' => 'syslog',
+                ),
+            'filenames' =>
+                array(
+                    0 => '/var/log/test.log',
+                ),
+            'filepath' => 'vfs://etc/crowdsec/acquis.d/test-multi.yaml',
+        );
+
+        $this->assertEquals(
+            $expected,
+            $acquis
+        );
+
+        $yaml->deleteYamlAcquisitionByHash($hash);
+
+        $this->assertEquals(
+            true,
+            file_exists($this->root->url() . '/crowdsec/acquis.d/test-multi.yaml'),
+            'Yaml File should still exist'
+        );
+
+        $allAcquis = $yaml->getAcquisFromYamls();
+
+        $this->assertEquals(
+            6,
+            count($allAcquis)
+        );
+    }
+
+
+    public function testUpsertYamlAcquisitionByHashInMulti(){
+
+        $origContent = file_get_contents($this->root->url() . '/crowdsec/acquis.d/test-multi.yaml');
+        $expectedContent = file_get_contents(__DIR__ . '../../../MockedData/etc/crowdsec/acquis.d/test-multi.yaml');
+
+        $this->assertEquals(
+            $expectedContent,
+            $origContent,
+            'Yaml File should be the same'
+        );
+
+        $yaml = new Yaml();
+        $newAcquis = array(
+            'source' => 'file',
+            'log_level' => 'debug',
+            'labels' =>
+                array(
+                    'type' => 'syslog',
+                ),
+            'filenames' =>
+                array(
+                    0 => '/var/log/test-new.log',
+                ),
+            'filepath' => 'vfs://etc/crowdsec/acquis.d/test-multi.yaml',
+        );
+        $newHash = $yaml->hash($newAcquis);
+
+        $yaml->upsertYamlAcquisitionByHash($newHash, 'vfs://etc/crowdsec/acquis.d/test-multi.yaml', $newAcquis);
+
+        $newContent = file_get_contents($this->root->url() . '/crowdsec/acquis.d/test-multi.yaml');
+        $expectedNewContent = file_get_contents(__DIR__ . '../../../MockedData/etc/crowdsec/acquis.d/test-multi-with-upserted.yaml');
+
+
+        $this->assertEquals(
+            $expectedNewContent,
+            $newContent,
+            'Yaml File should not be the same'
+        );
+
+    }
+
+    public function testUpsertYamlAcquisitionByHashInNew(){
+
+        $this->assertEquals(
+            false,
+            file_exists($this->root->url() . '/crowdsec/acquis.d/test-simple-new.yaml'),
+            'Yaml File should not exist'
+        );
+
+        $yaml = new Yaml();
+        $newAcquis = array(
+            'source' => 'file',
+            'log_level' => 'error',
+            'labels' =>
+                array(
+                    'type' => 'syslog',
+                ),
+            'filenames' =>
+                array(
+                    0 => '/var/log/test-simple-new.log',
+                ),
+            'filepath' => 'vfs://etc/crowdsec/acquis.d/test-simple-new.yaml',
+        );
+        $newHash = $yaml->hash($newAcquis);
+
+        $yaml->upsertYamlAcquisitionByHash($newHash, 'vfs://etc/crowdsec/acquis.d/test-simple-new.yaml', $newAcquis);
+
+        $this->assertEquals(
+            true,
+            file_exists($this->root->url() . '/crowdsec/acquis.d/test-simple-new.yaml'),
+            'Yaml File should exist'
+        );
+
+        $newContent = file_get_contents($this->root->url() . '/crowdsec/acquis.d/test-simple-new.yaml');
+        $expectedNewContent = file_get_contents(__DIR__ . '../../../MockedData/etc/crowdsec/acquis.d/test-simple-new.yaml');
+
+        $this->assertEquals(
+            $expectedNewContent,
+            $newContent,
+            'Yaml File should be the same'
+        );
+
     }
 
 }

@@ -170,27 +170,6 @@ class Yaml extends Data
     /**
      * @throws \RuntimeException
      */
-    public function getMultiYamlContent(string $filepath): array
-    {
-        $contents = file_get_contents($filepath);
-
-        if (false === $contents) {
-            throw new \RuntimeException("Unable to read file: $filepath");
-        }
-
-        $multiFileContents = explode('---', $contents);
-
-        // Remove values that are empty or contain only whitespace
-        $multiFileContents = array_filter($multiFileContents, function ($value) {
-            return '' !== trim($value);
-        });
-
-        return array_values($multiFileContents);
-    }
-
-    /**
-     * @throws \RuntimeException
-     */
     public function getYamlAcquisitionByHash(string $hash): array
     {
         if (!isset($this->yamlAcquisitionByHash[$hash])) {
@@ -198,25 +177,6 @@ class Yaml extends Data
         }
 
         return $this->yamlAcquisitionByHash[$hash];
-    }
-
-
-    /**
-     * @throws \RuntimeException
-     */
-    public function reloadYamlAcquisitionByHash(string $hash): array
-    {
-        $result = [];
-        $allYamlAcquis = $this->getAcquisFromYamls();
-
-        foreach ($allYamlAcquis as $yamlAcquis) {
-            if ($hash === $this->hash($yamlAcquis)) {
-                $result = $yamlAcquis;
-                break;
-            }
-        }
-
-        return $result;
     }
 
     public function upsertYamlAcquisitionByHash(string $hash, string $filepath, array $newContent): bool
@@ -241,31 +201,6 @@ class Yaml extends Data
         } catch (\Exception $e) {
             return false;
         }
-    }
-
-    /**
-     * Write content in a yaml file.
-     */
-    public function writeYamlSingleContent(array $content, string $filepath, int $flags = 0): bool
-    {
-        try {
-            $yaml = SymfonyYaml::dump($content, 4);
-            $folder = pathinfo($filepath, \PATHINFO_DIRNAME);
-            if (!is_dir($folder)) {
-                mkdir($folder, 0755, true);
-            }
-            if (file_exists($filepath) && \FILE_APPEND === $flags) {
-                $yaml = "---\n" . $yaml;
-            }
-
-            return (bool)file_put_contents($filepath, $yaml, $flags);
-        } catch (DumpException $e) {
-            $this->error('Unable to dump ' . $filepath . ': ' . $e->getMessage());
-        } catch (\Exception $e) {
-            $this->error('Unable write single content ' . $filepath . ': ' . $e->getMessage());
-        }
-
-        return false;
     }
 
     private function editMultiYamlContent(
@@ -328,7 +263,7 @@ class Yaml extends Data
     }
 
     /**
-     * @return bool|int|mixed|string[]
+     * @return bool|int|string[]
      */
     private function formatValue($value, string $configType = 'string')
     {
@@ -352,6 +287,27 @@ class Yaml extends Data
         }
 
         return $this->configContent;
+    }
+
+    /**
+     * @throws \RuntimeException
+     */
+    private function getMultiYamlContent(string $filepath): array
+    {
+        $contents = file_get_contents($filepath);
+
+        if (false === $contents) {
+            throw new \RuntimeException("Unable to read file: $filepath");
+        }
+
+        $multiFileContents = explode('---', $contents);
+
+        // Remove values that are empty or contain only whitespace
+        $multiFileContents = array_filter($multiFileContents, function ($value) {
+            return '' !== trim($value);
+        });
+
+        return array_values($multiFileContents);
     }
 
     /**
@@ -526,6 +482,23 @@ class Yaml extends Data
         return $this->editMultiYamlContent($filepath, $hash, $oldContents);
     }
 
+    /**
+     * @throws \RuntimeException
+     */
+    private function reloadYamlAcquisitionByHash(string $hash): array
+    {
+        $result = [];
+        $allYamlAcquis = $this->getAcquisFromYamls();
+
+        foreach ($allYamlAcquis as $yamlAcquis) {
+            if ($hash === $this->hash($yamlAcquis)) {
+                $result = $yamlAcquis;
+                break;
+            }
+        }
+
+        return $result;
+    }
 
     /**
      * @throws Exception
@@ -535,5 +508,30 @@ class Yaml extends Data
         if (empty($formData['filepath'])) {
             throw new Exception('Filepath is required');
         }
+    }
+
+    /**
+     * Write content in a yaml file.
+     */
+    private function writeYamlSingleContent(array $content, string $filepath, int $flags = 0): bool
+    {
+        try {
+            $yaml = SymfonyYaml::dump($content, 4);
+            $folder = pathinfo($filepath, \PATHINFO_DIRNAME);
+            if (!is_dir($folder)) {
+                mkdir($folder, 0755, true);
+            }
+            if (file_exists($filepath) && \FILE_APPEND === $flags) {
+                $yaml = "---\n" . $yaml;
+            }
+
+            return (bool)file_put_contents($filepath, $yaml, $flags);
+        } catch (DumpException $e) {
+            $this->error('Unable to dump ' . $filepath . ': ' . $e->getMessage());
+        } catch (\Exception $e) {
+            $this->error('Unable write single content ' . $filepath . ': ' . $e->getMessage());
+        }
+
+        return false;
     }
 }
