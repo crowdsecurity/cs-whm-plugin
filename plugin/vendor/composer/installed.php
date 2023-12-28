@@ -3,7 +3,7 @@
         'name' => 'crowdsec/whm-plugin',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'c368a610eb9dc84db37bbc8b5576c5fef194f09d',
+        'reference' => '8fddf477c2021a97c9c6d14782c078e2a5c0fd5e',
         'type' => 'whm-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'crowdsec/whm-plugin' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'c368a610eb9dc84db37bbc8b5576c5fef194f09d',
+            'reference' => '8fddf477c2021a97c9c6d14782c078e2a5c0fd5e',
             'type' => 'whm-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

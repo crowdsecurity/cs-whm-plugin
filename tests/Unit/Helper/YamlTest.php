@@ -619,14 +619,16 @@ final class YamlTest extends TestCase
         $contents = [['source' => 'file']];
         $filepath = 'vfs://etc/crowdsec/test-folder/some.yaml';
 
-        $this->assertDirectoryDoesNotExist(
+        PHPUnitUtil::assertDirectoryDoesNotExist(
+            $this,
             $this->root->url() . '/crowdsec/test-folder',
             'Folder should not exist'
         );
 
         PHPUnitUtil::callMethod(new Yaml(), 'overwriteYamlMultipleContents', [$contents, $filepath]);
 
-        $this->assertDirectoryExists(
+        PHPUnitUtil::assertDirectoryExists(
+            $this,
             $this->root->url() . '/crowdsec/test-folder',
             'Folder should not exist'
         );
@@ -667,16 +669,18 @@ EOT;
         $contents = ['source' => 'file'];
         $filepath = 'vfs://etc/crowdsec/test-folder/some.yaml';
 
-        $this->assertDirectoryDoesNotExist(
+        PHPUnitUtil::assertDirectoryDoesNotExist(
+            $this,
             $this->root->url() . '/crowdsec/test-folder',
             'Folder should not exist'
         );
 
         PHPUnitUtil::callMethod(new Yaml(), 'writeYamlSingleContent', [$contents, $filepath]);
 
-        $this->assertDirectoryExists(
+        PHPUnitUtil::assertDirectoryExists(
+            $this,
             $this->root->url() . '/crowdsec/test-folder',
-            'Folder should not exist'
+            'Folder should exist'
         );
 
         $expected = <<<EOT
