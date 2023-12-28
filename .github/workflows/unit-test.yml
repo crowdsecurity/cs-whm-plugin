@@ -67,10 +67,17 @@ jobs:
         run:  ddev php ./${{env.EXTENSION_PATH}}/tools/vendor/bin/phpunit --debug ./${{env.EXTENSION_PATH}}/tests/Unit --testdox
 
       - name: Run Unit tests with code coverage
-        if: github.event.inputs.coverage_report == 'true'
+        if: matrix.php-version != '7.2' && github.event.inputs.coverage_report == 'true'
         run: |
           ddev xdebug
           ddev php -dxdebug.mode=coverage  ./${{env.EXTENSION_PATH}}/tools/vendor/bin/phpunit --configuration ./${{env.EXTENSION_PATH}}/tools/phpunit/phpunit.xml --coverage-text=./${{env.EXTENSION_PATH}}/tools/phpunit/code-coverage/report.txt
           cat ${{env.EXTENSION_PATH}}/tools/phpunit/code-coverage/report.txt
+
+      - name: Run Unit tests with code coverage for PHP 7.2
+        if: matrix.php-version == '7.2' && github.event.inputs.coverage_report == 'true'
+        run: |
+          ddev xdebug
+          ddev php -dxdebug.mode=coverage  ./${{env.EXTENSION_PATH}}/tools/vendor/bin/phpunit --configuration ./${{env.EXTENSION_PATH}}/tools/phpunit/phpunit8.xml
+          cat ${{env.EXTENSION_PATH}}/tools/phpunit/code-coverage-8/report.txt    
 
 
