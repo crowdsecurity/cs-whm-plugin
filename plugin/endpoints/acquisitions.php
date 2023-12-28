@@ -7,8 +7,8 @@ require_once '/usr/local/cpanel/php/WHM.php';
 
 use CrowdSec\Whm\Acquisition\YamlCollection;
 use CrowdSec\Whm\Constants;
-use CrowdSec\Whm\Helper\Yaml;
 use CrowdSec\Whm\Helper\Shell;
+use CrowdSec\Whm\Helper\Yaml;
 use CrowdSec\Whm\Template;
 use Symfony\Component\HttpFoundation\Session\Session;
 

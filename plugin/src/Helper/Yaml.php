@@ -7,7 +7,6 @@ namespace CrowdSec\Whm\Helper;
 use CrowdSec\Whm\Acquisition\Config;
 use CrowdSec\Whm\Constants;
 use CrowdSec\Whm\Exception;
-use Symfony\Component\Yaml\Exception\DumpException;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Yaml as SymfonyYaml;
@@ -115,7 +114,6 @@ class Yaml extends Data
         }
     }
 
-
     public function getAcquisDir(): string
     {
         if (null === $this->acquisDir) {
@@ -161,7 +159,7 @@ class Yaml extends Data
     {
         if (null === $this->acquisPath) {
             $config = $this->getConfig();
-            $this->acquisPath = (string)$config['crowdsec_service']['acquisition_path'];
+            $this->acquisPath = (string) $config['crowdsec_service']['acquisition_path'];
         }
 
         return $this->acquisPath;
@@ -237,7 +235,7 @@ class Yaml extends Data
     private function findKeyToEdit(array $oldContents, string $hash): ?int
     {
         foreach ($oldContents as $key => $oldContent) {
-            if ($hash === $this->hash($oldContent)) {
+            if (is_array($oldContent) && $hash === $this->hash($oldContent)) {
                 return $key;
             }
         }
@@ -271,7 +269,7 @@ class Yaml extends Data
             case 'boolean':
                 return 'true' === $value;
             case 'integer':
-                return (int)$value;
+                return (int) $value;
             case 'array':
                 return explode(\PHP_EOL, $value);
             default:
@@ -319,7 +317,7 @@ class Yaml extends Data
         $foundFiles = [];
         $iterator = new \DirectoryIterator($acquisDir);
         foreach ($iterator as $fileinfo) {
-            if ($fileinfo->isFile() && $fileinfo->getExtension() === 'yaml') {
+            if ($fileinfo->isFile() && 'yaml' === $fileinfo->getExtension()) {
                 $foundFiles[] = $fileinfo->getPathname();
             }
         }
@@ -357,7 +355,7 @@ class Yaml extends Data
             $parser = new Parser();
             $result = $parser->parse($value);
         } catch (ParseException $exception) {
-            $this->error('Unable to parse string' . $value . ': ' . $exception->getMessage());
+            $this->error('Unable to parse string ' . $value . ': ' . $exception->getMessage());
         }
 
         return $result;
@@ -381,10 +379,6 @@ class Yaml extends Data
     private function overwriteYamlMultipleContents(array $contents, string $filepath): bool
     {
         try {
-            $folder = pathinfo($filepath, \PATHINFO_DIRNAME);
-            if (!is_dir($folder)) {
-                mkdir($folder, 0755, true);
-            }
             $i = 0;
             $count = count($contents);
             $yaml = '';
@@ -396,10 +390,16 @@ class Yaml extends Data
                 $yaml .= SymfonyYaml::dump($content, 4);
                 ++$i;
             }
+            if ($yaml) {
+                $folder = pathinfo($filepath, \PATHINFO_DIRNAME);
+                if (!is_dir($folder)) {
+                    mkdir($folder, 0755, true);
+                }
 
-            return $yaml && file_put_contents($filepath, $yaml);
+                return (bool) file_put_contents($filepath, $yaml);
+            }
         } catch (\Exception $exception) {
-            $this->error('Unable overwrite ' . $filepath . ': ' . $exception->getMessage());
+            $this->error('Unable to overwrite ' . $filepath . ': ' . $exception->getMessage());
         }
 
         return false;
@@ -525,11 +525,9 @@ class Yaml extends Data
                 $yaml = "---\n" . $yaml;
             }
 
-            return (bool)file_put_contents($filepath, $yaml, $flags);
-        } catch (DumpException $e) {
-            $this->error('Unable to dump ' . $filepath . ': ' . $e->getMessage());
+            return (bool) file_put_contents($filepath, $yaml, $flags);
         } catch (\Exception $e) {
-            $this->error('Unable write single content ' . $filepath . ': ' . $e->getMessage());
+            $this->error('Unable to write single content ' . $filepath . ': ' . $e->getMessage());
         }
 
         return false;

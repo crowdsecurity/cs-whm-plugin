@@ -63,7 +63,9 @@ class Template
             $formEngine = new TwigRendererEngine(['forms/bootstrap_4_layout.html.twig'], $twig);
             $twig->addRuntimeLoader(new FactoryRuntimeLoader([
                 FormRenderer::class => function () use ($formEngine) {
+                    // @codeCoverageIgnoreStart
                     return new FormRenderer($formEngine);
+                    // @codeCoverageIgnoreEnd
                 },
             ]));
         }
@@ -73,7 +75,9 @@ class Template
 
         // Add function to check if a string matches a shell wildcard pattern
         $twig->addFunction(new TwigFunction('fnmatch', function (string $pattern, string $string): bool {
+            // @codeCoverageIgnoreStart
             return fnmatch($pattern, $string);
+            // @codeCoverageIgnoreEnd
         }));
 
         $this->template = $twig->load($path);

@@ -1,0 +1,13 @@
+source: file
+log_level: debug
+labels:
+    type: syslog
+filenames:
+    - /var/log/test-updated.log
+---
+filenames:
+    - eeeeee
+log_level: trace
+labels:
+    type: syslog
+source: file
