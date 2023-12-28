@@ -36,6 +36,26 @@ class PHPUnitUtil
         }
     }
 
+    public static function assertDirectoryDoesNotExist($testCase, $directory, $message = '')
+    {
+        if (version_compare(self::getPHPUnitVersion(), '9.0', '>=')) {
+            $testCase->assertDirectoryDoesNotExist($directory, $message);
+        } else {
+            $directoryExists = is_dir($directory) && is_readable($directory);
+            $testCase->assertFalse($directoryExists);
+        }
+    }
+
+    public static function assertDirectoryExists($testCase, $directory, $message = '')
+    {
+        if (version_compare(self::getPHPUnitVersion(), '9.0', '>=')) {
+            $testCase->assertDirectoryExists($directory, $message);
+        } else {
+            $directoryExists = is_dir($directory) && is_readable($directory);
+            $testCase->assertTrue($directoryExists);
+        }
+    }
+
     public static function callMethod($obj, $name, array $args)
     {
         $class = new \ReflectionClass($obj);

@@ -200,6 +200,7 @@ class ComposerStaticInita6b3340f3ba6fcb2b83c6f65b8edf1d7
         'CrowdSec\\Whm\\Form\\AcquisitionType' => __DIR__ . '/../..' . '/src/Form/AcquisitionType.php',
         'CrowdSec\\Whm\\Helper\\Data' => __DIR__ . '/../..' . '/src/Helper/Data.php',
         'CrowdSec\\Whm\\Helper\\Shell' => __DIR__ . '/../..' . '/src/Helper/Shell.php',
+        'CrowdSec\\Whm\\Helper\\Yaml' => __DIR__ . '/../..' . '/src/Helper/Yaml.php',
         'CrowdSec\\Whm\\Template' => __DIR__ . '/../..' . '/src/Template.php',
         'IntlDateFormatter' => __DIR__ . '/..' . '/symfony/polyfill-intl-icu/Resources/stubs/IntlDateFormatter.php',
         'JsonException' => __DIR__ . '/..' . '/symfony/polyfill-php73/Resources/stubs/JsonException.php',

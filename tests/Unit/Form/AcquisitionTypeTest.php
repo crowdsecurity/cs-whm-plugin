@@ -4,20 +4,33 @@ declare(strict_types=1);
 
 namespace CrowdSec\Whm\Tests\Unit\Form;
 
-use PHPUnit\Framework\TestCase;
 use CrowdSec\Whm\Form\AcquisitionType;
 use CrowdSec\Whm\Tests\PHPUnitUtil;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\FormBuilderInterface;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
 
+/**
+ * @covers \CrowdSec\Whm\Form\AcquisitionType::buildForm
+ *
+ * @uses \CrowdSec\Whm\Acquisition\Config::__construct
+ *
+ * @covers \CrowdSec\Whm\Acquisition\Config::getConfig
+ * @covers \CrowdSec\Whm\Form\AcquisitionType::handleConfig
+ * @covers \CrowdSec\Whm\Form\AcquisitionType::handleSingleConfig
+ *
+ * @uses \CrowdSec\Whm\Helper\Data::getAcquisitionVersion
+ * @uses \CrowdSec\Whm\Helper\Yaml::getAcquisDir
+ * @uses \CrowdSec\Whm\Helper\Yaml::getConfig
+ * @uses \CrowdSec\Whm\Helper\Yaml::getYamlContent
+ */
 final class AcquisitionTypeTest extends TestCase
 {
-
     /**
      * @var vfsStreamDirectory
      */
@@ -33,21 +46,19 @@ final class AcquisitionTypeTest extends TestCase
         vfsStream::newFile('config.yaml')
             ->at($crowdsecDirectory)
             ->setContent($configContent);
-
     }
 
-    protected function tearDown(): void {
+    protected function tearDown(): void
+    {
         putenv('CROWDSEC_CONFIG_PATH'); // Reset the env variable
     }
-
 
     public function testHandleSingleConfigForStringType(): void
     {
         $acquisitionType = new AcquisitionType();
 
         $result =
-            PHPUnitUtil::callMethod($acquisitionType, 'handleSingleConfig', ['name' => 'test', 'config' => ['type' =>
-                'string']]);
+            PHPUnitUtil::callMethod($acquisitionType, 'handleSingleConfig', ['name' => 'test', 'config' => ['type' => 'string']]);
 
         $this->assertEquals(TextType::class, $result['class']);
     }
@@ -63,14 +74,14 @@ final class AcquisitionTypeTest extends TestCase
                     'label' => 'test-label',
                     'help' => 'test-help',
                     'required' => true,
-                ], 'prefix' => 'test_prefix_'
+                ], 'prefix' => 'test_prefix_',
                 ]);
 
         $this->assertEqualsCanonicalizing(
             [
                 'class' => TextType::class,
                 'label' => 'test-label',
-                'name'=> 'test_prefix_test_name',
+                'name' => 'test_prefix_test_name',
                 'required' => true,
                 'help' => 'test-help',
             ],
@@ -83,8 +94,7 @@ final class AcquisitionTypeTest extends TestCase
         $acquisitionType = new AcquisitionType();
 
         $result =
-            PHPUnitUtil::callMethod($acquisitionType, 'handleSingleConfig', ['name' => 'test', 'config' => ['type' =>
-                'array']]);
+            PHPUnitUtil::callMethod($acquisitionType, 'handleSingleConfig', ['name' => 'test', 'config' => ['type' => 'array']]);
 
         $this->assertEquals(TextareaType::class, $result['class']);
     }
@@ -94,8 +104,7 @@ final class AcquisitionTypeTest extends TestCase
         $acquisitionType = new AcquisitionType();
 
         $result =
-            PHPUnitUtil::callMethod($acquisitionType, 'handleSingleConfig', ['name' => 'test-name', 'config' => ['type' =>
-                'enum', 'values' => ['test1', 'test2']]]);
+            PHPUnitUtil::callMethod($acquisitionType, 'handleSingleConfig', ['name' => 'test-name', 'config' => ['type' => 'enum', 'values' => ['test1', 'test2']]]);
 
         $this->assertEquals(ChoiceType::class, $result['class']);
         $this->assertEquals('test-name', $result['name']);
@@ -107,20 +116,17 @@ final class AcquisitionTypeTest extends TestCase
         $acquisitionType = new AcquisitionType();
 
         $result =
-            PHPUnitUtil::callMethod($acquisitionType, 'handleSingleConfig', ['name' => 'test', 'config' => ['type' =>
-                'integer']]);
+            PHPUnitUtil::callMethod($acquisitionType, 'handleSingleConfig', ['name' => 'test', 'config' => ['type' => 'integer']]);
 
         $this->assertEquals(IntegerType::class, $result['class']);
     }
-
 
     public function testHandleSingleConfigForBooleanType(): void
     {
         $acquisitionType = new AcquisitionType();
 
         $result =
-            PHPUnitUtil::callMethod($acquisitionType, 'handleSingleConfig', ['name' => 'test', 'config' => ['type' =>
-                'boolean']]);
+            PHPUnitUtil::callMethod($acquisitionType, 'handleSingleConfig', ['name' => 'test', 'config' => ['type' => 'boolean']]);
 
         $this->assertEquals(ChoiceType::class, $result['class']);
         $this->assertEquals(['true' => 'true', 'false' => 'false'], $result['choices']);
@@ -131,9 +137,7 @@ final class AcquisitionTypeTest extends TestCase
         $acquisitionType = new AcquisitionType();
 
         $result =
-            PHPUnitUtil::callMethod($acquisitionType, 'handleConfig', ['name' => 'test', 'config' => ['type' =>
-                'boolean']]);
-
+            PHPUnitUtil::callMethod($acquisitionType, 'handleConfig', ['name' => 'test', 'config' => ['type' => 'boolean']]);
 
         $this->assertCount(1, $result);
         $this->assertEquals(ChoiceType::class, $result[0]['class']);
@@ -143,11 +147,9 @@ final class AcquisitionTypeTest extends TestCase
     {
         $acquisitionType = new AcquisitionType();
 
-
         $config = ['type' => 'map', 'values' => ['value1' => ['type' => 'string'], 'value2' => ['type' => 'integer']]];
         $result =
             PHPUnitUtil::callMethod($acquisitionType, 'handleConfig', ['name' => 'test', 'config' => $config]);
-
 
         $this->assertCount(2, $result);
         $this->assertEquals(TextType::class, $result[0]['class']);
@@ -158,24 +160,19 @@ final class AcquisitionTypeTest extends TestCase
     {
         $builderMock = $this->createMock(FormBuilderInterface::class);
         $callCount = 0;
-        $expectedCount= 4;
+        $expectedCount = 4;
         $builderMock->method('add')
             ->willReturnCallback(function ($fieldName, $fieldType, $options) use (&$callCount, $builderMock) {
-                if (in_array($fieldName, ['filepath', 'common_source','file_filenames', 'save'])) {
-                    $callCount++;
+                if (in_array($fieldName, ['filepath', 'common_source', 'file_filenames', 'save'])) {
+                    ++$callCount;
                 }
 
                 return $this->returnValue($builderMock);
             });
 
-
-
         $acquisitionType = new AcquisitionType();
         $acquisitionType->buildForm($builderMock, []);
 
         $this->assertEquals($expectedCount, $callCount);
-
-
     }
-
 }

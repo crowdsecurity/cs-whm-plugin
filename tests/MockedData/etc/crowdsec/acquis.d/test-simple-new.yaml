@@ -1,0 +1,6 @@
+source: file
+log_level: error
+labels:
+    type: syslog
+filenames:
+    - /var/log/test-simple-new.log

@@ -48,7 +48,7 @@ class Shell extends Yaml
             return ['output' => self::NO_EXEC_FUNC, 'return_code' => $returnCode];
         }
 
-        if (!in_array($command, $this->commandWhitelist)) {
+        if (!in_array($command, $this->getWhitelist())) {
             return ['output' => 'Command not allowed', 'return_code' => $returnCode];
         }
 
@@ -115,6 +115,11 @@ class Shell extends Yaml
         }
 
         return $this->execFunc;
+    }
+
+    protected function getWhitelist(): array
+    {
+        return $this->commandWhitelist;
     }
 
     private function escapeShellCmd(string $command): string

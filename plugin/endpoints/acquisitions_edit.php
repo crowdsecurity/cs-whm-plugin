@@ -9,8 +9,8 @@ use CrowdSec\Whm\Acquisition\YamlCollection;
 use CrowdSec\Whm\Constants;
 use CrowdSec\Whm\Exception;
 use CrowdSec\Whm\Form\AcquisitionType;
-use CrowdSec\Whm\Helper\Yaml;
 use CrowdSec\Whm\Helper\Shell;
+use CrowdSec\Whm\Helper\Yaml;
 use CrowdSec\Whm\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,7 +29,6 @@ $formData = [];
 $yamlAcquisition = false;
 if ($currentHash) {
     $yamlAcquisition = $yaml->getYamlAcquisitionByHash($currentHash);
-
     $formData = $yaml->convertYamlToForm($yamlAcquisition);
 }
 $template = new Template('acquisitions-edit.html.twig', AcquisitionType::class, $formData);

@@ -4,14 +4,27 @@ declare(strict_types=1);
 
 namespace CrowdSec\Whm\Tests\Unit\Helper;
 
-use CrowdSec\Whm\Helper\Shell;
 use CrowdSec\Whm\Exception;
-use PHPUnit\Framework\TestCase;
+use CrowdSec\Whm\Helper\Shell;
 use CrowdSec\Whm\Tests\PHPUnitUtil;
+use PHPUnit\Framework\TestCase;
 
+/**
+ * @covers \CrowdSec\Whm\Helper\Shell::checkConfig
+ * @covers \CrowdSec\Whm\Helper\Shell::escapeShellCmd
+ * @covers \CrowdSec\Whm\Helper\Shell::exec
+ * @covers \CrowdSec\Whm\Helper\Shell::getExecFunc
+ * @covers \CrowdSec\Whm\Helper\Shell::getLastRestart
+ * @covers \CrowdSec\Whm\Helper\Shell::getLastRestartSince
+ * @covers \CrowdSec\Whm\Helper\Shell::getAcquisitionMetrics
+ * @covers \CrowdSec\Whm\Helper\Shell::getMetrics
+ * @covers \CrowdSec\Whm\Helper\Shell::getReadAcquisitionsBySource
+ * @covers \CrowdSec\Whm\Helper\Shell::getReadFileAcquisitions
+ * @covers \CrowdSec\Whm\Helper\Shell::hasNoExecFunc
+ * @covers \CrowdSec\Whm\Helper\Shell::getWhitelist
+ */
 final class ShellTest extends TestCase
 {
-
     public function testCheckConfigThrowsExceptionWhenExecReturnsNonZero(): void
     {
         $shell = $this->getMockBuilder(Shell::class)
@@ -63,22 +76,11 @@ final class ShellTest extends TestCase
 
     public function testExecReturnsOutputAndReturnCodeWhenCommandInWhitelist(): void
     {
-        $shell = new Shell();
+        $shell = $this->getMockBuilder(Shell::class)
+            ->setMethods(['getWhitelist'])
+            ->getMock();
 
-        $reflector = new \ReflectionObject($shell);
-
-        // Get the private property commandWhitelist
-        $property = $reflector->getProperty('commandWhitelist');
-        $property->setAccessible(true);
-
-        // Get the current value of commandWhitelist
-        $currentWhitelist = $property->getValue($shell);
-
-        // Add a new value to the whitelist array
-        $currentWhitelist[] = 'echo -n "ok"';
-
-        // Set the modified array back to the commandWhitelist property
-        $property->setValue($shell, $currentWhitelist);
+        $shell->method('getWhitelist')->willReturn(['echo -n "ok"']);
 
         $result = $shell->exec('echo -n "ok"');
 
@@ -87,6 +89,24 @@ final class ShellTest extends TestCase
         $this->assertArrayHasKey('return_code', $result);
         $this->assertEquals(0, $result['return_code']);
         $this->assertEquals('ok', $result['output']);
+    }
+
+    public function testExecStderrToStdout()
+    {
+        $shell = $this->getMockBuilder(Shell::class)
+            ->setMethods(['getWhitelist'])
+            ->getMock();
+
+        $shell->method('getWhitelist')->willReturn(['echo -n "ok" 2>&1']);
+
+        $result = $shell->exec('echo -n "ok" 2>&1');
+
+        $expected = [
+            'return_code' => 0,
+            'output' => 'ok',
+        ];
+
+        $this->assertEquals($expected, $result);
     }
 
     public function testGetLastRestartSince(): void
@@ -103,16 +123,27 @@ final class ShellTest extends TestCase
         $result = PHPUnitUtil::callMethod($shell, 'getLastRestartSince', []);
 
         $this->assertEquals($lastRestartSince, $result);
-
     }
 
+    public function testGetLastRestartSinceWhenFailed(): void
+    {
+        $shell = $this->getMockBuilder(Shell::class)
+            ->setMethods(['exec'])
+            ->getMock();
+
+        $currentTime = time();
+        $shell->method('exec')->willReturn(['return_code' => 1, 'output' => 'Something when wrong']);
+
+        $result = $shell->getLastRestartSince();
+
+        $this->assertEquals($currentTime, $result);
+    }
 
     public function testgetReadFileAcquisitions(): void
     {
         $shell = $this->getMockBuilder(Shell::class)
             ->setMethods(['exec'])
             ->getMock();
-
 
         $metrics = file_get_contents(__DIR__ . '../../../MockedData/metrics.json');
 
@@ -121,13 +152,12 @@ final class ShellTest extends TestCase
         $result = PHPUnitUtil::callMethod($shell, 'getReadFileAcquisitions', []);
 
         $this->assertIsArray($result);
-        $expected = array (
+        $expected = [
             0 => '/var/log/messages',
             1 => '/var/log/secure',
-        );
+        ];
         $this->assertEquals($expected, $result);
     }
-
 
     public function testHasNoExecFunc(): void
     {
@@ -139,4 +169,60 @@ final class ShellTest extends TestCase
         $this->assertFalse($result);
     }
 
+    public function testExecCall()
+    {
+        $shell = $this->getMockBuilder(Shell::class)
+            ->setMethods(['getExecFunc', 'getWhitelist'])
+            ->getMock();
+
+        $shell->method('getExecFunc')->willReturn('exec');
+        $shell->method('getWhitelist')->willReturn(['echo -n "ok"']);
+
+        $result = $shell->exec('echo -n "ok"');
+
+        $expected = [
+            'return_code' => 0,
+            'output' => 'ok',
+        ];
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testGetWhitelist()
+    {
+        $shell = new Shell();
+
+        $result = PHPUnitUtil::callMethod($shell, 'getWhitelist', []);
+
+        $expected = [
+            'cscli alerts list -l 0 -o json',
+            'cscli bouncers list -o json',
+            'cscli collections list -o json',
+            'cscli decisions list -l 0 -o json',
+            'cscli machines list -o json',
+            'cscli parsers list -o json',
+            'cscli postoverflows list -o json',
+            'cscli scenarios list -o json',
+            'cscli metrics -o json',
+            'systemctl is-active crowdsec',
+            'systemctl restart crowdsec',
+            'crowdsec -t 2>&1',
+            'systemctl show -p ActiveEnterTimestamp --value crowdsec',
+        ];
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testGetMetricsEmpty(): void
+    {
+        $shell = $this->getMockBuilder(Shell::class)
+            ->setMethods(['exec'])
+            ->getMock();
+
+        $shell->method('exec')->willReturn(['return_code' => 1, 'output' => 'Something when wrong']);
+
+        $result = PHPUnitUtil::callMethod($shell, 'getMetrics', []);
+
+        $this->assertEquals([], $result);
+    }
 }

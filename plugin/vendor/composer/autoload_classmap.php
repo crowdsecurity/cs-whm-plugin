@@ -17,6 +17,7 @@ return array(
     'CrowdSec\\Whm\\Form\\AcquisitionType' => $baseDir . '/src/Form/AcquisitionType.php',
     'CrowdSec\\Whm\\Helper\\Data' => $baseDir . '/src/Helper/Data.php',
     'CrowdSec\\Whm\\Helper\\Shell' => $baseDir . '/src/Helper/Shell.php',
+    'CrowdSec\\Whm\\Helper\\Yaml' => $baseDir . '/src/Helper/Yaml.php',
     'CrowdSec\\Whm\\Template' => $baseDir . '/src/Template.php',
     'IntlDateFormatter' => $vendorDir . '/symfony/polyfill-intl-icu/Resources/stubs/IntlDateFormatter.php',
     'JsonException' => $vendorDir . '/symfony/polyfill-php73/Resources/stubs/JsonException.php',

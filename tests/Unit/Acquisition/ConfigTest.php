@@ -4,19 +4,24 @@ declare(strict_types=1);
 
 namespace CrowdSec\Whm\Tests\Unit\Acquisition;
 
-use PHPUnit\Framework\TestCase;
 use CrowdSec\Whm\Acquisition\Config;
 use CrowdSec\Whm\Exception;
 use CrowdSec\Whm\Tests\PHPUnitUtil;
+use PHPUnit\Framework\TestCase;
 
+/**
+ * @covers \CrowdSec\Whm\Acquisition\Config::__construct
+ * @covers \CrowdSec\Whm\Acquisition\Config::getConfigsByType
+ * @covers \CrowdSec\Whm\Acquisition\Config::getMapConfigs
+ * @covers \CrowdSec\Whm\Acquisition\Config::getMapNames
+ * @covers \CrowdSec\Whm\Acquisition\Config::getConfig
+ */
 final class ConfigTest extends TestCase
 {
     /** @var Config */
     private $config;
 
-
-
-    public function constructorThrowsExceptionWhenVersionNotImplemented()
+    public function testConstructorThrowsExceptionWhenVersionNotImplemented()
     {
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('Version not_implemented_version is not implemented');
@@ -24,9 +29,9 @@ final class ConfigTest extends TestCase
         new Config('not_implemented_version');
     }
 
-    public function constructorSetsConfigWhenVersionImplemented()
+    public function testConstructorSetsConfigWhenVersionImplemented()
     {
-        $config = new Config('1.0');
+        $config = new Config('v1');
 
         $this->assertIsArray($config->getConfig());
         $this->assertNotEmpty($config->getConfig());
@@ -34,7 +39,6 @@ final class ConfigTest extends TestCase
 
     public function testGetConfigReturnsWholeConfigWhenNoSourceProvided()
     {
-
         $this->config = new Config('v1');
         $result = $this->config->getConfig();
         $this->assertIsArray($result);
@@ -51,7 +55,7 @@ final class ConfigTest extends TestCase
             's3',
             'syslog',
             'docker',
-        ],array_keys($result));
+        ], array_keys($result));
     }
 
     public function testGetConfigReturnsEmptyArrayWhenInvalidSourceProvided()
@@ -75,11 +79,8 @@ final class ConfigTest extends TestCase
             'force_inotify',
             'max_buffer_size',
             'poll_without_inotify',
-        ],array_keys($result));
+        ], array_keys($result));
     }
-
-
-
 
     public function testConfigsByTypeReturnsEmptyArrayWhenTypeNotPresent()
     {
@@ -98,9 +99,24 @@ final class ConfigTest extends TestCase
         $this->assertEqualsCanonicalizing([
             'common',
             'kafka',
-        ],array_keys($result));
+        ], array_keys($result));
     }
 
+    public function testConfigsByTypeReturnsConfigNamesForMapToo()
+    {
+        $this->config = new Config('v1');
+        $result = $this->config->getConfigsByType('boolean');
+        $this->assertIsArray($result);
+        $this->assertNotEmpty($result);
+        $this->assertEqualsCanonicalizing([
+            'cloudwatch',
+            'common',
+            'docker',
+            'file',
+            'kafka',
+            'kinesis',
+        ], array_keys($result));
+    }
 
     public function testMapNamesReturnsMapConfigNamesWhenMapConfigsExist()
     {
@@ -111,7 +127,7 @@ final class ConfigTest extends TestCase
         $this->assertEqualsCanonicalizing([
             'labels',
             'tls',
-        ],$result);
+        ], $result);
     }
 
     public function testGetMapConfigs()
@@ -122,6 +138,4 @@ final class ConfigTest extends TestCase
         $this->assertIsArray($mapConfigs);
         $this->assertNotEmpty($mapConfigs);
     }
-
-
 }
