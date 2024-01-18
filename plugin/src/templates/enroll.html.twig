@@ -37,7 +37,7 @@
                 <div class="alert alert-info">
                     <ul>
                         {% for message in flashes.notice %}
-                            <li>{{ message }}</li>
+                            <li>{{ message | raw }}</li>
                         {% endfor %}
                     </ul>
                 </div>

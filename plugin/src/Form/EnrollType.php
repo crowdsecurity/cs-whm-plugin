@@ -33,7 +33,12 @@ class EnrollType extends AbstractType
             TextType::class,
             array_merge(
                 ['label' => 'Enrollment key'],
-                ['required' => true, 'help' => 'You can obtain your enrollment key in your CrowdSec Console.']
+                [
+                    'required' => true,
+                    'help' => 'You can obtain your enrollment key in your ' .
+                              '<a href="https://app.crowdsec.net/">CrowdSec console</a>',
+                    'help_html' => true
+                ]
             )
         );
 

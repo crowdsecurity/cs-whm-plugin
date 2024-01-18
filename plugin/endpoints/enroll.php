@@ -59,7 +59,7 @@ if ($form->isSubmitted()) {
 
     if ($success) {
         $flashes->add('success', 'Security engine enrolled successfully.');
-        $flashes->add('notice', 'Please accept this enrollment in your CrowdSec console.');
+        $flashes->add('notice', 'Please accept this enrollment in your <a href="https://app.crowdsec.net/">CrowdSec console</a>.');
     }
 
     if (isset($_SERVER['REQUEST_URI'])) {
