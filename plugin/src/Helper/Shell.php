@@ -70,7 +70,7 @@ class Shell extends Yaml
 
         $enroll = $this->exec('cscli console enroll', $commandSuffix);
         if (0 !== $enroll['return_code']) {
-            throw new Exception('Invalid config: ' . $enroll['output']);
+            throw new Exception('Something went wrong: ' . $enroll['output']);
         }
         if (false !== strpos($enroll['output'], 'overwrite')) {
             throw new Exception('Instance is already enrolled. You can use the overwrite option to force enroll.');
