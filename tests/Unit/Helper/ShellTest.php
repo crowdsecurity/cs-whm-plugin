@@ -208,6 +208,7 @@ final class ShellTest extends TestCase
             'systemctl restart crowdsec',
             'crowdsec -t 2>&1',
             'systemctl show -p ActiveEnterTimestamp --value crowdsec',
+            'cscli console enroll'
         ];
 
         $this->assertEquals($expected, $result);

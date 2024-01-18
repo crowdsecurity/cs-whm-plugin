@@ -120,7 +120,7 @@ ddev composer update --working-dir ./my-code/whm-plugin/plugin
 
 ##### Production release
 
-To release a new version of the plugin on the WordPress marketplace, you must run:
+To release a new production version of the plugin, you must run:
 
 ```shell
 ddev composer update --no-dev --prefer-dist --optimize-autoloader --working-dir ./my-code/whm-plugin/plugin
