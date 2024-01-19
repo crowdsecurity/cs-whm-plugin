@@ -10,6 +10,14 @@ functions provided by the plugin folder.
 
 ---
 
+## [0.0.8](https://github.com/crowdsecurity/cs-whm-plugin/releases/tag/v0.0.8) - 2024-01-19
+[_Compare with previous release_](https://github.com/crowdsecurity/cs-whm-plugin/compare/v0.0.7...v0.0.8)
+
+### Added
+- Add enroll feature
+--- 
+
+
 ## [0.0.7](https://github.com/crowdsecurity/cs-whm-plugin/releases/tag/v0.0.7) - 2024-01-11
 [_Compare with previous release_](https://github.com/crowdsecurity/cs-whm-plugin/compare/v0.0.6...v0.0.7)
 

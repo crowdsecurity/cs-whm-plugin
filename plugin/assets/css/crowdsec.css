@@ -185,7 +185,7 @@
     cursor: help;
 }
 
-form[name="acquisition"] {
+form[name="acquisition"], form[name="enroll"] {
     max-width: 60%;
 }
 

@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<ruleset name="CrowdSec CAPI PHP Client rule set"
+<ruleset name="CrowdSec WHM plugin rule set"
          xmlns="http://pmd.sf.net/ruleset/1.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0
@@ -7,7 +7,7 @@
          xsi:noNamespaceSchemaLocation="
                        http://pmd.sf.net/ruleset_xml_schema.xsd">
     <description>
-        Rule set that checks CrowdSec PHP common
+        Rule set that checks CrowdSec WHM plugin code.
     </description>
 
     <rule ref="rulesets/codesize.xml" >
@@ -17,6 +17,7 @@
     <rule ref="rulesets/cleancode.xml">
         <exclude name="MissingImport"/>
         <exclude name="StaticAccess"/>
+        <exclude name="BooleanArgumentFlag"/>
     </rule>
     <rule ref="rulesets/unusedcode.xml" />
     <!-- Allow more complexity -->
@@ -45,6 +46,13 @@
         <properties>
             <property name="exceptions" >
                 <value><![CDATA[\Symfony\Component\HttpFoundation\Request,\Symfony\Component\Yaml\Yaml]]></value>
+            </property>
+        </properties>
+    </rule>
+    <rule ref="rulesets/cleancode.xml/BooleanArgumentFlag">
+        <properties>
+            <property name="ignorepattern" >
+                <value>/^(enroll)$/</value>
             </property>
         </properties>
     </rule>

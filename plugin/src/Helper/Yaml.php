@@ -11,6 +11,16 @@ use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Yaml as SymfonyYaml;
 
+/**
+ * The helper shell class.
+ *
+ * @author    CrowdSec team
+ *
+ * @see      https://crowdsec.net CrowdSec Official Website
+ *
+ * @copyright Copyright (c) 2020+ CrowdSec
+ * @license   MIT License
+ */
 class Yaml extends Data
 {
     private $acquisDir;

@@ -4,6 +4,16 @@ declare(strict_types=1);
 
 namespace CrowdSec\Whm\Helper;
 
+/**
+ * The helper data class.
+ *
+ * @author    CrowdSec team
+ *
+ * @see      https://crowdsec.net CrowdSec Official Website
+ *
+ * @copyright Copyright (c) 2020+ CrowdSec
+ * @license   MIT License
+ */
 class Data
 {
     public function error(string $message): void

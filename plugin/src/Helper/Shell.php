@@ -6,6 +6,16 @@ namespace CrowdSec\Whm\Helper;
 
 use CrowdSec\Whm\Exception;
 
+/**
+ * The helper shell class.
+ *
+ * @author    CrowdSec team
+ *
+ * @see      https://crowdsec.net CrowdSec Official Website
+ *
+ * @copyright Copyright (c) 2020+ CrowdSec
+ * @license   MIT License
+ */
 class Shell extends Yaml
 {
     public const NO_EXEC_FUNC = 'no_exec_func';
@@ -23,6 +33,7 @@ class Shell extends Yaml
         'systemctl restart crowdsec',
         'crowdsec -t 2>&1',
         'systemctl show -p ActiveEnterTimestamp --value crowdsec',
+        'cscli console enroll',
     ];
     private $execFunc;
     private $readFileAcquisitions;
@@ -40,7 +51,35 @@ class Shell extends Yaml
         return true;
     }
 
-    public function exec(string $command): array
+    /**
+     * @throws Exception
+     */
+    public function enroll(string $key, string $name = '', array $tags = [], bool $overwrite = false): array
+    {
+        $commandSuffix = '';
+        if ($name) {
+            $commandSuffix .= ' --name ' . escapeshellarg(trim($name));
+        }
+        foreach ($tags as $tag) {
+            $commandSuffix .= ' --tags ' . escapeshellarg(trim($tag));
+        }
+        if ($overwrite) {
+            $commandSuffix .= ' --overwrite';
+        }
+        $commandSuffix .= ' ' . escapeshellarg(trim($key)) . ' 2>&1';
+
+        $enroll = $this->exec('cscli console enroll', $commandSuffix);
+        if (0 !== $enroll['return_code']) {
+            throw new Exception('Something went wrong: ' . $enroll['output']);
+        }
+        if (false !== strpos($enroll['output'], 'overwrite')) {
+            throw new Exception('Instance is already enrolled. You can use the overwrite option to force enroll.');
+        }
+
+        return $enroll;
+    }
+
+    public function exec(string $command, string $suffix = ''): array
     {
         $execFunc = $this->getExecFunc();
         $returnCode = -1;
@@ -52,7 +91,7 @@ class Shell extends Yaml
             return ['output' => 'Command not allowed', 'return_code' => $returnCode];
         }
 
-        $command = $this->escapeShellCmd($command);
+        $command = $this->escapeShellCmd($command . ' ' . $suffix);
 
         ob_start();
         switch ($execFunc) {

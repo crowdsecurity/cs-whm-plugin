@@ -22,6 +22,7 @@ use PHPUnit\Framework\TestCase;
  * @covers \CrowdSec\Whm\Helper\Shell::getReadFileAcquisitions
  * @covers \CrowdSec\Whm\Helper\Shell::hasNoExecFunc
  * @covers \CrowdSec\Whm\Helper\Shell::getWhitelist
+ * @covers \CrowdSec\Whm\Helper\Shell::enroll
  */
 final class ShellTest extends TestCase
 {
@@ -46,6 +47,73 @@ final class ShellTest extends TestCase
         $shell->method('exec')->willReturn(['return_code' => 0, 'output' => '']);
 
         $this->assertTrue($shell->checkConfig());
+    }
+
+
+    public function testEnroll(): void
+    {
+        $shell = $this->getMockBuilder(Shell::class)
+            ->setMethods(['exec'])
+            ->getMock();
+
+        $shell->expects($this->once())
+            ->method('exec')
+            ->with(
+                $this->equalTo('cscli console enroll'),
+                $this->equalTo(' --name \'my-name\' --tags \'my-tag\' --overwrite \'my-key\' 2>&1')
+            )
+            ->willReturn(['return_code' => 0, 'output' => '']);
+
+        $shell->enroll('my-key', 'my-name', ['my-tag'], true);
+    }
+
+    public function testEnroll2(): void
+    {
+        $shell = $this->getMockBuilder(Shell::class)
+            ->setMethods(['exec'])
+            ->getMock();
+
+        $shell->expects($this->once())
+            ->method('exec')
+            ->with(
+                $this->equalTo('cscli console enroll'),
+                $this->equalTo(' --name \'my-name\' --tags \'my-tag1\' --tags \'my-tag2\' \'my-key\' 2>&1')
+            )
+            ->willReturn(['return_code' => 0, 'output' => '']);
+
+        $shell->enroll('my-key', 'my-name', ['my-tag1','my-tag2']);
+    }
+
+    public function testEnrollException(){
+
+        $shell = $this->getMockBuilder(Shell::class)
+            ->setMethods(['exec'])
+            ->getMock();
+
+        $shell
+            ->method('exec')
+            ->willReturn(['return_code' => 1, 'output' => 'Not good']);
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('Something went wrong: Not good');
+
+        $shell->enroll('my-key', 'my-name', ['my-tag1','my-tag2']);
+    }
+
+    public function testEnrollOverwriteException(){
+
+        $shell = $this->getMockBuilder(Shell::class)
+            ->setMethods(['exec'])
+            ->getMock();
+
+        $shell
+            ->method('exec')
+            ->willReturn(['return_code' => 0, 'output' => 'Some message with \'overwrite\' inside']);
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('Instance is already enrolled. You can use the overwrite option to force enroll.');
+
+        $shell->enroll('my-key', 'my-name', ['my-tag1','my-tag2']);
     }
 
     public function testExecReturnsNoExecFuncWhenNoExecFuncAvailable(): void
@@ -208,6 +276,7 @@ final class ShellTest extends TestCase
             'systemctl restart crowdsec',
             'crowdsec -t 2>&1',
             'systemctl show -p ActiveEnterTimestamp --value crowdsec',
+            'cscli console enroll'
         ];
 
         $this->assertEquals($expected, $result);
