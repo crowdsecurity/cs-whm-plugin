@@ -1,0 +1,6 @@
+# ConfigServer LFD path :
+## put in /etc/crowdsec/acquis.d/configserver-lfd.yaml
+filenames:
+  - /var/log/lfd.log
+labels:
+  type: syslog

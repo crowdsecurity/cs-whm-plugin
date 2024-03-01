@@ -85,6 +85,10 @@ Installing CrowdSec plugin...
 crowdsec registered
 ```
 
+If you've already installed CrowdSec, the script will also use the `cscli` command to install the WHM collection, create a few acquisition files and restart the CrowdSec service.
+
+```shell
+
 ### Go back to your WHM dashboard
 
 

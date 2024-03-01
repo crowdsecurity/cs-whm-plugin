@@ -37,6 +37,9 @@ install () {
 
   /bin/cp ./cs_48.png /usr/local/cpanel/whostmgr/docroot/addon_plugins/crowdsec
   chmod 755 /usr/local/cpanel/whostmgr/docroot/addon_plugins/crowdsec/cs_48.png
+
+  # Install crowdsec/whm collection
+  install_collection
 }
 
 uninstall () {
@@ -46,6 +49,48 @@ uninstall () {
   # Remove plugin files.
   /bin/rm -rf /usr/local/cpanel/whostmgr/docroot/cgi/crowdsec
   /bin/rm -rf /usr/local/cpanel/whostmgr/docroot/addon_plugins/crowdsec
+}
+
+add_acquisition_files () {
+  if [ -d /etc/crowdsec ]
+    dest=/etc/crowdsec/acquis.d
+    src=./src/Acquisition/examples
+    then
+      if [ ! -d "$dest" ]
+        then
+          mkdir "$dest"
+          chmod -R 755 "$dest"
+      fi
+      need_restart=false
+      for file in "$src"/*; do
+        # Extract filename
+        filename=$(basename "$file")
+        # Check if the file does not exist in the destination directory
+        if [ ! -f "$dest/$filename" ]; then
+          echo "Copying $filename to $dest"
+          /bin/cp "$file" "$dest"
+          chmod 644 "$dest/$filename"
+          need_restart=true
+        fi
+      done
+      if [ "$need_restart" = true ]; then
+        echo "Restarting crowdsec service..."
+        systemctl restart crowdsec
+      fi
+  else
+    echo "/etc/crowdsec directory not found."
+  fi
+}
+
+install_collection () {
+  if command -v cscli >/dev/null 2>&1; then
+    echo "cscli found, installing crowdsecurity/whm collection..."
+    cscli hub update
+    cscli --error collections install crowdsecurity/whm
+    add_acquisition_files
+  else
+    echo "cscli command not found."
+  fi
 }
 
 case $1 in
