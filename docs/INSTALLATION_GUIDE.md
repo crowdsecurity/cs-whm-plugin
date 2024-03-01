@@ -87,6 +87,13 @@ crowdsec registered
 
 If you've already installed CrowdSec, the script will also use the `cscli` command to install the WHM collection, create a few acquisition files and restart the CrowdSec service.
 
+If you don't want the script to install the WHM collection, you can use the `--only-plugin` option:
+
+```
+sudo sh crowdsec.sh install --only-plugin
+```
+
+
 ```shell
 
 ### Go back to your WHM dashboard

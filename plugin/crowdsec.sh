@@ -2,6 +2,20 @@
 # Crowdsec - Crowdsec is a free, modern & collaborative behavior detection engine, coupled with a global IP reputation network.
 # https://crowdsec.net/
 
+# Flag to determine if only the plugin should be installed
+ONLY_PLUGIN=0
+
+check_for_only_plugin_argument() {
+    for arg in "$@"; do
+        if [ "$arg" = "--only-plugin" ]; then
+            ONLY_PLUGIN=1
+            return
+        fi
+    done
+}
+
+
+
 install () {
   # Check for and create the directory for plugin and AppConfig files.
   if [ ! -d /var/cpanel/apps ]
@@ -39,7 +53,9 @@ install () {
   chmod 755 /usr/local/cpanel/whostmgr/docroot/addon_plugins/crowdsec/cs_48.png
 
   # Install crowdsec/whm collection
-  install_collection
+  if [ $ONLY_PLUGIN -ne 1 ]; then
+    install_collection
+  fi
 }
 
 uninstall () {
@@ -61,7 +77,6 @@ add_acquisition_files () {
           mkdir "$dest"
           chmod -R 755 "$dest"
       fi
-      need_restart=false
       for file in "$src"/*; do
         # Extract filename
         filename=$(basename "$file")
@@ -70,13 +85,8 @@ add_acquisition_files () {
           echo "Copying $filename to $dest"
           /bin/cp "$file" "$dest"
           chmod 644 "$dest/$filename"
-          need_restart=true
         fi
       done
-      if [ "$need_restart" = true ]; then
-        echo "Restarting crowdsec service..."
-        systemctl restart crowdsec
-      fi
   else
     echo "/etc/crowdsec directory not found."
   fi
@@ -88,10 +98,14 @@ install_collection () {
     cscli hub update
     cscli --error collections install crowdsecurity/whm
     add_acquisition_files
+    echo "Restarting crowdsec service..."
+    systemctl restart crowdsec
   else
-    echo "cscli command not found."
+    echo "CrowdSec cscli command not found."
   fi
 }
+
+check_for_only_plugin_argument "$@"
 
 case $1 in
   install)
