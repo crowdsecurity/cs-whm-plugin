@@ -5,6 +5,11 @@
                     <img alt="CrowdSec logo" src="{{ cpSession }}/cgi/crowdsec/assets/css/images/logo_crowdsec.png">
                 </a>
             </div>
+            <div class="crowdsec-main-nav-item {% if active == "settings"   %} active {% endif %}">
+                <a href="{{ cpSession }}/cgi/crowdsec/endpoints/settings.php">
+                    Settings
+                </a>
+            </div>
             <div class="crowdsec-main-nav-item {% if active == "status"   %} active {% endif %}">
                 <a href="{{ cpSession }}/cgi/crowdsec/endpoints/status.php">
                     Status

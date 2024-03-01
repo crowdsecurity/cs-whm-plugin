@@ -188,6 +188,9 @@
 form[name="acquisition"], form[name="enroll"] {
     max-width: 60%;
 }
+form[name="settings"] {
+    max-width: 40%;
+}
 
 input[type="text"],
 input[type="number"],
