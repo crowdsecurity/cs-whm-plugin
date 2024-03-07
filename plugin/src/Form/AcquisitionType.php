@@ -30,9 +30,6 @@ use Symfony\Component\HttpFoundation\Request;
 class AcquisitionType extends AbstractType
 {
     /**
-     * @param FormBuilderInterface $builder
-     * @param array $options
-     * @return void
      * @throws Exception
      * @throws \LogicException
      */

@@ -49,7 +49,6 @@ final class ShellTest extends TestCase
         $this->assertTrue($shell->checkConfig());
     }
 
-
     public function testEnroll(): void
     {
         $shell = $this->getMockBuilder(Shell::class)
@@ -81,11 +80,11 @@ final class ShellTest extends TestCase
             )
             ->willReturn(['return_code' => 0, 'output' => '']);
 
-        $shell->enroll('my-key', 'my-name', ['my-tag1','my-tag2']);
+        $shell->enroll('my-key', 'my-name', ['my-tag1', 'my-tag2']);
     }
 
-    public function testEnrollException(){
-
+    public function testEnrollException()
+    {
         $shell = $this->getMockBuilder(Shell::class)
             ->setMethods(['exec'])
             ->getMock();
@@ -97,11 +96,11 @@ final class ShellTest extends TestCase
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('Something went wrong: Not good');
 
-        $shell->enroll('my-key', 'my-name', ['my-tag1','my-tag2']);
+        $shell->enroll('my-key', 'my-name', ['my-tag1', 'my-tag2']);
     }
 
-    public function testEnrollOverwriteException(){
-
+    public function testEnrollOverwriteException()
+    {
         $shell = $this->getMockBuilder(Shell::class)
             ->setMethods(['exec'])
             ->getMock();
@@ -113,7 +112,7 @@ final class ShellTest extends TestCase
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('Instance is already enrolled. You can use the overwrite option to force enroll.');
 
-        $shell->enroll('my-key', 'my-name', ['my-tag1','my-tag2']);
+        $shell->enroll('my-key', 'my-name', ['my-tag1', 'my-tag2']);
     }
 
     public function testExecReturnsNoExecFuncWhenNoExecFuncAvailable(): void
@@ -276,7 +275,9 @@ final class ShellTest extends TestCase
             'systemctl restart crowdsec',
             'crowdsec -t 2>&1',
             'systemctl show -p ActiveEnterTimestamp --value crowdsec',
-            'cscli console enroll'
+            'cscli console enroll',
+            'cscli config show --key Config.API.Server.ListenURI',
+            'cscli config show --key Config.Prometheus.ListenPort',
         ];
 
         $this->assertEquals($expected, $result);

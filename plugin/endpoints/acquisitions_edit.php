@@ -23,7 +23,7 @@ $session->start();
 $flashes = $session->getFlashBag();
 $yaml = new Yaml();
 $shell = new Shell();
-$currentHash = (string)$request->query->get('id');
+$currentHash = (string) $request->query->get('id');
 
 $formData = [];
 $yamlAcquisition = false;
@@ -51,7 +51,7 @@ if ($form->isSubmitted()) {
         // Check if the filename ends with .yml and replace it with .yaml
         if (preg_match('/\.yml$/', $filepath)) {
             $filepath = preg_replace('/\.yml$/', '.yaml', $filepath);
-        } else if (!preg_match('/\.yaml$/', $filepath)) {
+        } elseif (!preg_match('/\.yaml$/', $filepath)) {
             // If it doesn't end with .yaml (and wasn't .yml), append .yaml
             $filepath .= '.yaml';
         }

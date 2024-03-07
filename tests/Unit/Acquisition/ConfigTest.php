@@ -74,7 +74,6 @@ final class ConfigTest extends TestCase
         $this->assertNotEmpty($result);
         $this->assertEqualsCanonicalizing([
             'exclude_regexps',
-            'filename',
             'filenames',
             'force_inotify',
             'max_buffer_size',
