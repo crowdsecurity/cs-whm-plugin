@@ -8,6 +8,7 @@ require_once '/usr/local/cpanel/php/WHM.php';
 use CrowdSec\Whm\Constants;
 use CrowdSec\Whm\Form\SettingsType;
 use CrowdSec\Whm\Helper\Shell;
+use CrowdSec\Whm\Helper\Yaml;
 use CrowdSec\Whm\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,17 +20,29 @@ $session = new Session();
 $session->start();
 $flashes = $session->getFlashBag();
 $shell = new Shell();
+$yaml = new Yaml();
 
-$formData = [];
-$template = new Template('settings.html.twig', SettingsType::class, $formData);
+$currentConfigs = $shell->getConfigs();
+$template = new Template('settings.html.twig', SettingsType::class, $currentConfigs);
 
 $form = $template->getForm();
 $form->handleRequest();
 
 if ($form->isSubmitted()) {
-    $formData = $form->getData();
+    $formData = array_merge($form->getData(), ['lapi_host' => $currentConfigs['lapi_host']]);
 
-   //@TODO: modify config.yaml or config.local.yaml
+    if ($formData !== $currentConfigs) {
+        $yaml->setLocalConfigs($formData);
+        $flashes->add('success', 'Settings updated');
+        $flashes->add('notice', 'Please restart the CrowdSec service to apply changes.');
+        $session->set('crowdsec_restart_needed', true);
+    }
+
+    if (isset($_SERVER['REQUEST_URI'])) {
+        $response = new RedirectResponse($_SERVER['REQUEST_URI']);
+
+        return $response->send();
+    }
 }
 
 WHM::header(Constants::CONTENT_TITLE);

@@ -26,6 +26,7 @@ class SettingsType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+
         $builder->add(
             'lapi_port',
             IntegerType::class,
@@ -33,8 +34,8 @@ class SettingsType extends AbstractType
                 ['label' => 'LAPI port'],
                 [
                     'required' => true,
-                    'help' => 'Example: 8080 <br>
-See /etc/crowdsec/config.yaml.local:<br>api:<br>&nbsp;&nbsp;server:<br>&nbsp;&nbsp;&nbsp;&nbsp;listen_uri:  127.0.0.1:&lt;port_number&gt;',
+                    'help' => 'See /etc/crowdsec/config.yaml.local:<br>api:
+<br>&nbsp;&nbsp;server:<br>&nbsp;&nbsp;&nbsp;&nbsp;listen_uri:  127.0.0.1:&lt;port_number&gt;',
                     'help_html' => true
                 ]
             )
@@ -46,8 +47,8 @@ See /etc/crowdsec/config.yaml.local:<br>api:<br>&nbsp;&nbsp;server:<br>&nbsp;&nb
             array_merge(
                 ['label' => 'Prometheus port'],
                 ['required' => true,
-                    'help' => 'Example: 6060 <br>
-See /etc/crowdsec/config.yaml.local:<br>prometheus:<br>&nbsp;&nbsp;listen_port:&lt;port_number&gt;',
+                    'help' => 'See /etc/crowdsec/config.yaml.local:<br>prometheus:
+<br>&nbsp;&nbsp;listen_port:&lt;port_number&gt;',
                     'help_html' => true]
             )
         );

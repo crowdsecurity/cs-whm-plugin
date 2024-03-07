@@ -26,6 +26,7 @@ class Yaml extends Data
     private $acquisDir;
     private $acquisPath;
     private $configContent = [];
+    private $localConfigContent = [];
     private $yamlAcquisitionByHash = [];
 
     /**
@@ -169,7 +170,7 @@ class Yaml extends Data
     {
         if (null === $this->acquisPath) {
             $config = $this->getConfig();
-            $this->acquisPath = (string) $config['crowdsec_service']['acquisition_path'];
+            $this->acquisPath = (string)$config['crowdsec_service']['acquisition_path'];
         }
 
         return $this->acquisPath;
@@ -185,6 +186,24 @@ class Yaml extends Data
         }
 
         return $this->yamlAcquisitionByHash[$hash];
+    }
+
+    public function setLocalConfigs(array $configs): void
+    {
+        $lapiPort = $configs['lapi_port'] ?? Constants::LAPI_PORT;
+        $lapiHost = $configs['lapi_host'] ?? Constants::LAPI_HOST;
+        $prometheusPort = $configs['prometheus_port'] ?? Constants::PROMETHEUS_PORT;
+        $configPath = getenv('CROWDSEC_LOCAL_CONFIG_PATH') ?: Constants::LOCAL_CONFIG_PATH_DEFAULT;
+
+        $currentLocalConfigs = $this->getLocalConfig($configPath);
+        $finalConfigs =
+            array_merge($currentLocalConfigs,
+                [
+                    'api' => ['server' => ['listen_uri' => $lapiHost . ':' . $lapiPort]],
+                    'prometheus' => ['listen_port' => $prometheusPort]
+                ]);
+
+        $this->writeYamlSingleContent($finalConfigs, $configPath);
     }
 
     public function upsertYamlAcquisitionByHash(string $hash, string $filepath, array $newContent): bool
@@ -279,7 +298,7 @@ class Yaml extends Data
             case 'boolean':
                 return 'true' === $value;
             case 'integer':
-                return (int) $value;
+                return (int)$value;
             case 'array':
                 return explode(\PHP_EOL, $value);
             default:
@@ -295,6 +314,20 @@ class Yaml extends Data
         }
 
         return $this->configContent;
+    }
+
+    private function getLocalConfig($configPath): array
+    {
+        if (!$this->localConfigContent) {
+            $result = [];
+            if (file_exists($configPath)) {
+                $result = $this->getYamlContent($configPath);
+            }
+
+            $this->localConfigContent = $result;
+        }
+
+        return $this->localConfigContent;
     }
 
     /**
@@ -406,7 +439,7 @@ class Yaml extends Data
                     mkdir($folder, 0755, true);
                 }
 
-                return (bool) file_put_contents($filepath, $yaml);
+                return (bool)file_put_contents($filepath, $yaml);
             }
         } catch (\Exception $exception) {
             $this->error('Unable to overwrite ' . $filepath . ': ' . $exception->getMessage());
@@ -535,7 +568,7 @@ class Yaml extends Data
                 $yaml = "---\n" . $yaml;
             }
 
-            return (bool) file_put_contents($filepath, $yaml, $flags);
+            return (bool)file_put_contents($filepath, $yaml, $flags);
         } catch (\Exception $e) {
             $this->error('Unable to write single content ' . $filepath . ': ' . $e->getMessage());
         }
