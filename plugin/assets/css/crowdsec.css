@@ -216,6 +216,11 @@ select {
     max-width: 40%;
 }
 
+label.required::after, span.required::after {
+    content: " *";
+    color: red;
+}
+
 
 /* Service */
 

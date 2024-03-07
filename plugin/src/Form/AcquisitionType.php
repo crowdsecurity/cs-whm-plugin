@@ -30,6 +30,9 @@ use Symfony\Component\HttpFoundation\Request;
 class AcquisitionType extends AbstractType
 {
     /**
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     * @return void
      * @throws Exception
      * @throws \LogicException
      */
@@ -47,8 +50,10 @@ class AcquisitionType extends AbstractType
             'filepath',
             $hasId ? HiddenType::class : TextType::class,
             array_merge(
-                ['label' => 'Acquisition file path'],
-                $hasId ? [] : ['required' => true, 'help' => 'Relative path to ' . $yaml->getAcquisDir()]
+                ['label' => 'Acquisition file name'],
+                $hasId ? [] :
+                    ['required' => true, 'help_html' => true, 'help' => 'Will be written in ' . $yaml->getAcquisDir() .
+                                                                        '<br>Example: my_acquisition.yaml']
             )
         );
 
