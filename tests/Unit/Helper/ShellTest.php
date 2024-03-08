@@ -23,6 +23,7 @@ use PHPUnit\Framework\TestCase;
  * @covers \CrowdSec\Whm\Helper\Shell::hasNoExecFunc
  * @covers \CrowdSec\Whm\Helper\Shell::getWhitelist
  * @covers \CrowdSec\Whm\Helper\Shell::enroll
+ * @covers \CrowdSec\Whm\Helper\Shell::getConfigs
  */
 final class ShellTest extends TestCase
 {
@@ -190,6 +191,30 @@ final class ShellTest extends TestCase
         $result = PHPUnitUtil::callMethod($shell, 'getLastRestartSince', []);
 
         $this->assertEquals($lastRestartSince, $result);
+    }
+
+    public function testGetConfigs(): void
+    {
+        $shell = $this->getMockBuilder(Shell::class)
+            ->setMethods(['exec'])
+            ->getMock();
+
+
+        $shell->method('exec')->willReturnOnConsecutiveCalls(
+            ['output' => '127.0.0.1:8888', 'return_code' => 0],
+            ['output' => '1234', 'return_code' => 0]
+        );
+
+        $result = PHPUnitUtil::callMethod($shell, 'getConfigs', []);
+
+        $expected = [
+            'lapi_port' => '8888',
+            'lapi_host' => '127.0.0.1',
+            'prometheus_port' => '1234',
+        ];
+
+
+        $this->assertEquals($expected, $result);
     }
 
     public function testGetLastRestartSinceWhenFailed(): void

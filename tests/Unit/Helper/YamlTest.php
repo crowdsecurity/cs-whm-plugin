@@ -51,6 +51,8 @@ use PHPUnit\Framework\TestCase;
  * @covers \CrowdSec\Whm\Helper\Yaml::processKeyValueForYaml
  * @covers \CrowdSec\Whm\Helper\Yaml::validateFilepath
  * @covers \CrowdSec\Whm\Helper\Yaml::prepareOldContents
+ * @covers \CrowdSec\Whm\Helper\Yaml::getLocalConfig
+ * @covers \CrowdSec\Whm\Helper\Yaml::setLocalConfigs
  */
 final class YamlTest extends TestCase
 {
@@ -64,6 +66,7 @@ final class YamlTest extends TestCase
     protected function setUp(): void
     {
         putenv('CROWDSEC_CONFIG_PATH=vfs://etc/crowdsec/config.yaml');
+        putenv('CROWDSEC_LOCAL_CONFIG_PATH=vfs://etc/crowdsec/config.yaml.local');
 
         $this->errorLogFile = tempnam(sys_get_temp_dir(), 'test_log');
         ini_set('log_errors', '1');
@@ -77,6 +80,12 @@ final class YamlTest extends TestCase
         vfsStream::newFile('config.yaml')
             ->at($crowdsecDirectory)
             ->setContent($configContent);
+
+        $localConfigContent = file_get_contents(__DIR__ . '../../../MockedData/etc/crowdsec/config.yaml.local');
+
+        vfsStream::newFile('config.yaml.local')
+            ->at($crowdsecDirectory)
+            ->setContent($localConfigContent);
 
         $acquisitionContent = file_get_contents(__DIR__ . '../../../MockedData/etc/crowdsec/acquis.yaml');
 
@@ -103,6 +112,7 @@ final class YamlTest extends TestCase
     protected function tearDown(): void
     {
         putenv('CROWDSEC_CONFIG_PATH'); // Reset the env variable
+        putenv('CROWDSEC_LOCAL_CONFIG_PATH'); // Reset the env variable
         unlink($this->errorLogFile);
     }
 
@@ -328,11 +338,11 @@ final class YamlTest extends TestCase
             'source' => 'file',
             'log_level' => 'panic',
             'labels' => [
-                    'type' => 'syslog',
-                ],
+                'type' => 'syslog',
+            ],
             'filenames' => [
-                    0 => '/var/log/test.log',
-                ],
+                0 => '/var/log/test.log',
+            ],
             'filepath' => 'vfs://etc/crowdsec/acquis.d/test-multi.yaml',
         ];
 
@@ -373,11 +383,11 @@ final class YamlTest extends TestCase
             'source' => 'file',
             'log_level' => 'debug',
             'labels' => [
-                    'type' => 'syslog',
-                ],
+                'type' => 'syslog',
+            ],
             'filenames' => [
-                    0 => '/var/log/test-new.log',
-                ],
+                0 => '/var/log/test-new.log',
+            ],
             'filepath' => 'vfs://etc/crowdsec/acquis.d/test-multi.yaml',
         ];
         $newHash = $yaml->hash($newAcquis);
@@ -411,11 +421,11 @@ final class YamlTest extends TestCase
             'source' => 'file',
             'log_level' => 'debug',
             'labels' => [
-                    'type' => 'syslog',
-                ],
+                'type' => 'syslog',
+            ],
             'filenames' => [
-                    0 => '/var/log/test-updated.log',
-                ],
+                0 => '/var/log/test-updated.log',
+            ],
             'filepath' => 'vfs://etc/crowdsec/acquis.d/test-multi.yaml',
         ];
         $updatedHash = 'b52f487524e87a6256ca3843e90fdb2151f83ebf4c03bcebc707354a6b1996a1'; // hash of test-multi.yaml
@@ -446,11 +456,11 @@ final class YamlTest extends TestCase
             'source' => 'file',
             'log_level' => 'error',
             'labels' => [
-                    'type' => 'syslog',
-                ],
+                'type' => 'syslog',
+            ],
             'filenames' => [
-                    0 => '/var/log/test-simple-new.log',
-                ],
+                0 => '/var/log/test-simple-new.log',
+            ],
             'filepath' => 'vfs://etc/crowdsec/acquis.d/test-simple-new.yaml',
         ];
         $newHash = $yaml->hash($newAcquis);
@@ -712,5 +722,67 @@ EOT;
             '/.*\[CrowdSec Plugin log\] Unable to write single content vfs:\/\/unwritable.yaml.*/',
             $logContents,
             'Log File should contain the error');
+    }
+
+    public function testGetLocalConfig()
+    {
+        $filepath = getenv('CROWDSEC_LOCAL_CONFIG_PATH');
+        $result = PHPUnitUtil::callMethod(new Yaml(), 'getLocalConfig', [$filepath]);
+        $expected = [
+            'api' => [
+                'server' => [
+                    'listen_uri' => '127.0.0.1:7070',
+                ],
+            ],
+            'prometheus' => [
+                'listen_port' => 9090,
+            ],
+        ];
+
+        $this->assertEquals(
+            $expected,
+            $result
+        );
+    }
+
+
+    public function testSetLocalConfigs(){
+
+        $filepath = getenv('CROWDSEC_LOCAL_CONFIG_PATH');
+        $result = file_get_contents($filepath);
+        $expected = <<<EOT
+api:
+    server:
+        listen_uri: '127.0.0.1:7070'
+prometheus:
+    listen_port: 9090
+EOT;
+
+        $this->assertEquals(
+            $expected. PHP_EOL,
+            $result
+        );
+
+
+        $yaml = new Yaml();
+        $yaml->setLocalConfigs(['lapi_port' => 1234, 'lapi_host' => '0.0.0.0', 'prometheus_port' => 5678]);
+
+        $result = file_get_contents($filepath);
+
+        $expected = <<<EOT
+api:
+    server:
+        listen_uri: '0.0.0.0:1234'
+prometheus:
+    listen_port: 5678
+EOT;
+
+        $this->assertEquals(
+            $expected. PHP_EOL,
+            $result
+        );
+
+
+
     }
 }
