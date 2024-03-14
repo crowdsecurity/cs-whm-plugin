@@ -1,0 +1,7 @@
+# ftpxfer typical WHM override :
+## put in /etc/crowdsec/acquis.d/ftpxfer.yaml
+filenames:
+  - /usr/local/apache2/domlogs/ftpxferlog
+labels:
+  type: syslog
+  # depending on your ftp service the type can also be proftpd or vsftpd

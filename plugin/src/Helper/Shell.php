@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CrowdSec\Whm\Helper;
 
+use CrowdSec\Whm\Constants;
 use CrowdSec\Whm\Exception;
 
 /**
@@ -34,9 +35,12 @@ class Shell extends Yaml
         'crowdsec -t 2>&1',
         'systemctl show -p ActiveEnterTimestamp --value crowdsec',
         'cscli console enroll',
+        'cscli config show --key Config.API.Server.ListenURI',
+        'cscli config show --key Config.Prometheus.ListenPort',
     ];
     private $execFunc;
     private $readFileAcquisitions;
+    private $configs;
 
     /**
      * @throws Exception
@@ -131,6 +135,27 @@ class Shell extends Yaml
     public function hasNoExecFunc(): bool
     {
         return self::NO_EXEC_FUNC === $this->getExecFunc();
+    }
+
+    public function getConfigs(): array
+    {
+        if (null === $this->configs) {
+            $lapiURICall = $this->exec('cscli config show --key Config.API.Server.ListenURI');
+            $lapiUriResult = explode(':', $lapiURICall['output']);
+            $lapiPort = isset($lapiUriResult[1]) ? (int) $lapiUriResult[1] : Constants::LAPI_PORT;
+            $lapiHost = $lapiUriResult[0] ?? Constants::LAPI_HOST;
+            $prometheusPortCall = $this->exec('cscli config show --key Config.Prometheus.ListenPort');
+            $prometheusPort =
+                isset($prometheusPortCall['output']) ? (int) $prometheusPortCall['output'] : Constants::PROMETHEUS_PORT;
+
+            $this->configs = [
+                'lapi_port' => $lapiPort,
+                'lapi_host' => $lapiHost,
+                'prometheus_port' => $prometheusPort,
+            ];
+        }
+
+        return $this->configs;
     }
 
     protected function getExecFunc(): string

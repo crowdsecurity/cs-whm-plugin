@@ -76,18 +76,18 @@ const CrowdSec = (function () {
 
 
     function _updateFreshness(selector, timestamp) {
-        var $freshness = $(selector).find('.actionBar .freshness');
+        const freshness = $(selector).find('.actionBar .freshness');
         if (timestamp) {
-            $freshness.data('refresh_timestamp', timestamp);
+            freshness.data('refresh_timestamp', timestamp);
         } else {
-            timestamp = $freshness.data('refresh_timestamp');
+            timestamp = freshness.data('refresh_timestamp');
         }
-        var howlongHuman = '???';
+        let howlongHuman = '???';
         if (timestamp) {
-            var howlongms = moment() - moment(timestamp);
+            const howlongms = moment() - moment(timestamp);
             howlongHuman = moment.duration(howlongms).humanize();
         }
-        $freshness.text(howlongHuman + ' ago');
+        freshness.text(howlongHuman + ' ago');
     }
 
     function _addFreshness(selector) {
@@ -99,8 +99,19 @@ const CrowdSec = (function () {
         }, 5000);
     }
 
+    function _addErrorMessage(selector, message) {
+        var errorTemplate = '<span class="metrics-error danger">' + message + '<br>Please check Prometheus port in <a href="'+window.COMMON.securityToken+'/cgi/crowdsec/endpoints/settings.php">settings</a></span>';
+        $(selector).find('.bootgrid-footer').prepend(errorTemplate);
+    }
+
+    function _removeErrorMessage(selector) {
+        const error = $(selector).find('.bootgrid-footer .metrics-error');
+        if( error ) error.remove();
+    }
+
     function _refreshTab(selector, action, dataCallback) {
         $('.loading').show();
+        _removeErrorMessage(selector);
         $.ajax({
             url: window.COMMON.securityToken + api_url,
             cache: false,
@@ -257,7 +268,10 @@ const CrowdSec = (function () {
         const id = "#tab-metrics-acquisition";
         const dataCallback = function (data) {
             const rows = [];
-            if (data.acquisition) {
+            if(data.error){
+                _addErrorMessage(id, data.error);
+            }
+            else if (data.acquisition) {
                 const acquisition = Object.entries(data.acquisition);
                 acquisition.map(function (acquisition) {
                     if (acquisition.length === 2) {

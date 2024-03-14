@@ -1,0 +1,10 @@
+# You can leave the default apache2 path in acquis.yaml as it will deal with your server logs
+# this extra acquisition is for apache2 errors for your various users domains
+## put in /etc/crowdsec/acquis.d/apache2whm.yaml
+filenames:
+  - /var/log/apache2/domlogs/*
+exclude_regexps:
+  - .*ftpxferlog.*
+  # you can excluse other regexp that are not apache2 log files
+labels:
+  type: apache2

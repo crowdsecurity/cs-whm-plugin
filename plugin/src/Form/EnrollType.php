@@ -37,7 +37,7 @@ class EnrollType extends AbstractType
                     'required' => true,
                     'help' => 'You can obtain your enrollment key in your ' .
                               '<a href="https://app.crowdsec.net/">CrowdSec console</a>',
-                    'help_html' => true
+                    'help_html' => true,
                 ]
             )
         );
@@ -70,9 +70,9 @@ class EnrollType extends AbstractType
                     'help' => 'Force enroll the instance',
                     'choices' => [
                         'No' => false,
-                        'Yes' => true
+                        'Yes' => true,
                     ],
-                    'data' => false, 'placeholder' => null
+                    'data' => false, 'placeholder' => null,
                 ]
             )
         );

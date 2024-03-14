@@ -187,6 +187,26 @@ class Yaml extends Data
         return $this->yamlAcquisitionByHash[$hash];
     }
 
+    public function setLocalConfigs(array $configs): void
+    {
+        $lapiPort = $configs['lapi_port'];
+        $lapiHost = $configs['lapi_host'];
+        $prometheusPort = $configs['prometheus_port'];
+        $configPath = getenv('CROWDSEC_LOCAL_CONFIG_PATH') ?: Constants::LOCAL_CONFIG_PATH_DEFAULT;
+
+        $currentLocalConfigs = $this->getLocalConfig($configPath);
+        $finalConfigs =
+            array_merge(
+                $currentLocalConfigs,
+                [
+                    'api' => ['server' => ['listen_uri' => $lapiHost . ':' . $lapiPort]],
+                    'prometheus' => ['listen_port' => $prometheusPort],
+                ]
+            );
+
+        $this->writeYamlSingleContent($finalConfigs, $configPath);
+    }
+
     public function upsertYamlAcquisitionByHash(string $hash, string $filepath, array $newContent): bool
     {
         try {
@@ -295,6 +315,16 @@ class Yaml extends Data
         }
 
         return $this->configContent;
+    }
+
+    private function getLocalConfig($configPath): array
+    {
+        $result = [];
+        if (file_exists($configPath)) {
+            $result = $this->getYamlContent($configPath);
+        }
+
+        return $result;
     }
 
     /**

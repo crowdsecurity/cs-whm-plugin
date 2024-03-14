@@ -5,17 +5,14 @@ declare(strict_types=1);
 namespace CrowdSec\Whm\Tests\Unit\Form;
 
 use CrowdSec\Whm\Form\EnrollType;
-use CrowdSec\Whm\Tests\PHPUnitUtil;
-use Symfony\Component\Form\FormBuilderInterface;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Form\FormBuilderInterface;
 
 /**
  * @covers \CrowdSec\Whm\Form\EnrollType::buildForm
- *
  */
 final class EnrollTypeTest extends TestCase
 {
-
     public function testBuildForm(): void
     {
         $builderMock = $this->createMock(FormBuilderInterface::class);

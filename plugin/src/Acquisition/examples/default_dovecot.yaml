@@ -1,0 +1,9 @@
+# In case your Dovecot logs into syslog
+# syslog will likely route mail logs to maillog
+## put in /etc/crowdsec/acquis.d/dovecot.yaml
+## and comment out cpanel aqcuis default config in /etc/crowdsec/acquis.yaml if necessary
+## depending on your OS the file might be /var/log/maillog or /var/log/mail.log
+filenames:
+  - /var/log/maillog
+labels:
+  type: syslog

@@ -26,7 +26,7 @@
         "values": {
           "type": {
             "type": "string",
-            "label": "Labels Type",
+            "label": "Log Type",
             "help": "Example: syslog",
             "required": true
           },
@@ -71,15 +71,12 @@
       "filenames": {
         "type": "array",
         "label": "Filenames",
-        "help": "Absolute path (one filename per line)"
+        "help": "Absolute path (one filename per line)",
+        "required": true
       },
       "exclude_regexps": {
         "type": "array",
         "label": "Exclude Regexps"
-      },
-      "filename": {
-        "type": "string",
-        "label": "Filename"
       },
       "force_inotify": {
         "type": "boolean",

@@ -67,7 +67,13 @@ if ('POST' === $method && isset($_POST['action'])) {
         case 'metrics-lapi-list':
         case 'metrics-lapi-bouncers-list':
         case 'metrics-decisions-list':
-            echo $shell->exec('cscli metrics -o json')['output'];
+            $result = $shell->exec('cscli metrics -o json');
+            if (0 !== $result['return_code']) {
+                $result = '{"error": "Something went wrong while fetching metrics."}';
+            } else {
+                $result = $result['output'];
+            }
+            echo $result;
 
             break;
 

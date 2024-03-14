@@ -1,0 +1,52 @@
+{% include('partials/styles.html.twig') %}
+{% include('partials/scripts.html.twig') %}
+{% include('partials/services-scripts.html.twig') %}
+{% include('partials/breadcrumbs.html.twig') with {'cpSession': cpSession} %}
+{% include('partials/navigation.html.twig') with {'cpSession': cpSession, 'active': 'settings'} %}
+
+<script>
+    window.addEventListener("load", function (e) {
+        CrowdSecServices.initServices();
+    });
+</script>
+
+<div class="container-fluid">
+    {% include('partials/messages.html.twig') with {'no_exec_func': no_exec_func} %}
+    {% include('partials/services.html.twig') with {'restart_needed': restart_needed} %}
+    <div class="row">
+        <div class="col-md-12">
+            {% if flashes.success %}
+                <div class="alert alert-success">
+                    <ul>
+                        {% for message in flashes.success %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            {% if flashes.error %}
+                <div class="alert alert-danger">
+                    <ul>
+                        {% for message in flashes.error %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            {% if flashes.notice %}
+                <div class="alert alert-info">
+                    <ul>
+                        {% for message in flashes.notice %}
+                            <li>{{ message | raw }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            <div class="crowdsec-acquis-title">
+                <h2>Modify CrowdSec configurations</h2>
+            </div>
+            {{ form(form)}}
+            <p><span class="required"></span>: Required fields</p>
+            </div>
+        </div>
+    </div>

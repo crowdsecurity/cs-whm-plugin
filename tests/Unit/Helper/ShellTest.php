@@ -23,6 +23,7 @@ use PHPUnit\Framework\TestCase;
  * @covers \CrowdSec\Whm\Helper\Shell::hasNoExecFunc
  * @covers \CrowdSec\Whm\Helper\Shell::getWhitelist
  * @covers \CrowdSec\Whm\Helper\Shell::enroll
+ * @covers \CrowdSec\Whm\Helper\Shell::getConfigs
  */
 final class ShellTest extends TestCase
 {
@@ -48,7 +49,6 @@ final class ShellTest extends TestCase
 
         $this->assertTrue($shell->checkConfig());
     }
-
 
     public function testEnroll(): void
     {
@@ -81,11 +81,11 @@ final class ShellTest extends TestCase
             )
             ->willReturn(['return_code' => 0, 'output' => '']);
 
-        $shell->enroll('my-key', 'my-name', ['my-tag1','my-tag2']);
+        $shell->enroll('my-key', 'my-name', ['my-tag1', 'my-tag2']);
     }
 
-    public function testEnrollException(){
-
+    public function testEnrollException()
+    {
         $shell = $this->getMockBuilder(Shell::class)
             ->setMethods(['exec'])
             ->getMock();
@@ -97,11 +97,11 @@ final class ShellTest extends TestCase
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('Something went wrong: Not good');
 
-        $shell->enroll('my-key', 'my-name', ['my-tag1','my-tag2']);
+        $shell->enroll('my-key', 'my-name', ['my-tag1', 'my-tag2']);
     }
 
-    public function testEnrollOverwriteException(){
-
+    public function testEnrollOverwriteException()
+    {
         $shell = $this->getMockBuilder(Shell::class)
             ->setMethods(['exec'])
             ->getMock();
@@ -113,7 +113,7 @@ final class ShellTest extends TestCase
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('Instance is already enrolled. You can use the overwrite option to force enroll.');
 
-        $shell->enroll('my-key', 'my-name', ['my-tag1','my-tag2']);
+        $shell->enroll('my-key', 'my-name', ['my-tag1', 'my-tag2']);
     }
 
     public function testExecReturnsNoExecFuncWhenNoExecFuncAvailable(): void
@@ -191,6 +191,30 @@ final class ShellTest extends TestCase
         $result = PHPUnitUtil::callMethod($shell, 'getLastRestartSince', []);
 
         $this->assertEquals($lastRestartSince, $result);
+    }
+
+    public function testGetConfigs(): void
+    {
+        $shell = $this->getMockBuilder(Shell::class)
+            ->setMethods(['exec'])
+            ->getMock();
+
+
+        $shell->method('exec')->willReturnOnConsecutiveCalls(
+            ['output' => '127.0.0.1:8888', 'return_code' => 0],
+            ['output' => '1234', 'return_code' => 0]
+        );
+
+        $result = PHPUnitUtil::callMethod($shell, 'getConfigs', []);
+
+        $expected = [
+            'lapi_port' => '8888',
+            'lapi_host' => '127.0.0.1',
+            'prometheus_port' => '1234',
+        ];
+
+
+        $this->assertEquals($expected, $result);
     }
 
     public function testGetLastRestartSinceWhenFailed(): void
@@ -276,7 +300,9 @@ final class ShellTest extends TestCase
             'systemctl restart crowdsec',
             'crowdsec -t 2>&1',
             'systemctl show -p ActiveEnterTimestamp --value crowdsec',
-            'cscli console enroll'
+            'cscli console enroll',
+            'cscli config show --key Config.API.Server.ListenURI',
+            'cscli config show --key Config.Prometheus.ListenPort',
         ];
 
         $this->assertEquals($expected, $result);

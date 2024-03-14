@@ -15,6 +15,8 @@ return array(
     'CrowdSec\\Whm\\Constants' => $baseDir . '/src/Constants.php',
     'CrowdSec\\Whm\\Exception' => $baseDir . '/src/Exception.php',
     'CrowdSec\\Whm\\Form\\AcquisitionType' => $baseDir . '/src/Form/AcquisitionType.php',
+    'CrowdSec\\Whm\\Form\\EnrollType' => $baseDir . '/src/Form/EnrollType.php',
+    'CrowdSec\\Whm\\Form\\SettingsType' => $baseDir . '/src/Form/SettingsType.php',
     'CrowdSec\\Whm\\Helper\\Data' => $baseDir . '/src/Helper/Data.php',
     'CrowdSec\\Whm\\Helper\\Shell' => $baseDir . '/src/Helper/Shell.php',
     'CrowdSec\\Whm\\Helper\\Yaml' => $baseDir . '/src/Helper/Yaml.php',

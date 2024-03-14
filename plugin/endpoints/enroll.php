@@ -43,7 +43,7 @@ if ($form->isSubmitted()) {
     $success = true;
     try {
         $shell->enroll($key, $name, $tags, $overwrite);
-    } catch (\Exception $e) {
+    } catch (Exception $e) {
         $success = false;
         $flashes->add('error', 'Something went wrong while enrolling security engine.');
         $flashes->add('error', $e->getMessage());

@@ -43,6 +43,21 @@ if ($form->isSubmitted()) {
     $success = false;
     $formData = array_reverse($form->getData(), true);
 
+    // Handle filename on the fly if necessary
+    $filepath = $formData['filepath'] ?? '';
+    if (!empty($filepath)) {
+        // Replace all special characters and spaces with underscores
+        $filepath = preg_replace('/[^A-Za-z0-9.]/', '_', $filepath);
+        // Check if the filename ends with .yml and replace it with .yaml
+        if (preg_match('/\.yml$/', $filepath)) {
+            $filepath = preg_replace('/\.yml$/', '.yaml', $filepath);
+        } elseif (!preg_match('/\.yaml$/', $filepath)) {
+            // If it doesn't end with .yaml (and wasn't .yml), append .yaml
+            $filepath .= '.yaml';
+        }
+    }
+    $formData['filepath'] = $filepath;
+
     $newData = $yaml->convertFormToYaml($formData);
 
     $newHash = $yaml->hash($newData);

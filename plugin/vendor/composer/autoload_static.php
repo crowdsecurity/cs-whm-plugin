@@ -198,6 +198,8 @@ class ComposerStaticInita6b3340f3ba6fcb2b83c6f65b8edf1d7
         'CrowdSec\\Whm\\Constants' => __DIR__ . '/../..' . '/src/Constants.php',
         'CrowdSec\\Whm\\Exception' => __DIR__ . '/../..' . '/src/Exception.php',
         'CrowdSec\\Whm\\Form\\AcquisitionType' => __DIR__ . '/../..' . '/src/Form/AcquisitionType.php',
+        'CrowdSec\\Whm\\Form\\EnrollType' => __DIR__ . '/../..' . '/src/Form/EnrollType.php',
+        'CrowdSec\\Whm\\Form\\SettingsType' => __DIR__ . '/../..' . '/src/Form/SettingsType.php',
         'CrowdSec\\Whm\\Helper\\Data' => __DIR__ . '/../..' . '/src/Helper/Data.php',
         'CrowdSec\\Whm\\Helper\\Shell' => __DIR__ . '/../..' . '/src/Helper/Shell.php',
         'CrowdSec\\Whm\\Helper\\Yaml' => __DIR__ . '/../..' . '/src/Helper/Yaml.php',

@@ -28,14 +28,14 @@
         }
     },
     "require": {
-        "symfony/yaml": "^5.4.23",
-        "symfony/form": "^5.4.30",
-        "twig/twig": "^3.7.1",
-        "symfony/twig-bridge": "^5.4.26",
-        "symfony/http-foundation": "^5.4.30",
-        "symfony/translation": "^5.4.30",
-        "symfony/security-csrf": "^5.4.27",
-        "symfony/config": "^5.4.26",
+        "symfony/yaml": "^5.4.35",
+        "symfony/form": "^5.4.36",
+        "twig/twig": "^3.8.0",
+        "symfony/twig-bridge": "^5.4.36",
+        "symfony/http-foundation": "^5.4.35",
+        "symfony/translation": "^5.4.35",
+        "symfony/security-csrf": "^5.4.35",
+        "symfony/config": "^5.4.36",
         "ext-json": "*"
     },
     "autoload": {
