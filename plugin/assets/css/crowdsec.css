@@ -163,6 +163,10 @@
     table-layout: fixed;
 }
 
+#acquisitions td {
+    overflow-wrap: break-word;
+}
+
 #acquisitions td.content {
     white-space: nowrap;
     overflow: hidden;

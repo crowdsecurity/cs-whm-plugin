@@ -301,6 +301,7 @@ class Yaml extends Data
             case 'integer':
                 return (int) $value;
             case 'array':
+                $value = str_replace("\r\n", "\n", $value);
                 return explode(\PHP_EOL, $value);
             default:
                 return $value;
