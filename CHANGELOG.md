@@ -15,10 +15,10 @@ functions provided by the plugin folder.
 
 ### Changed
 
-- Modify install script to handle whm collection and example acquisitions
+- Modify install script to handle WHM collection and example acquisitions
 
 ### Added
-- Add settings oage
+- Add settings page to configure LAPI and Prometheus ports
 
 
 ---
