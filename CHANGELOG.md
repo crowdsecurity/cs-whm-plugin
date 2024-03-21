@@ -10,7 +10,7 @@ functions provided by the plugin folder.
 
 ---
 
-## [0.0.9](https://github.com/crowdsecurity/cs-whm-plugin/releases/tag/v0.0.9) - 2024-03-22
+## [0.0.9](https://github.com/crowdsecurity/cs-whm-plugin/releases/tag/v0.0.9) - 2024-03-21
 [_Compare with previous release_](https://github.com/crowdsecurity/cs-whm-plugin/compare/v0.0.8...v0.0.9)
 
 ### Changed
