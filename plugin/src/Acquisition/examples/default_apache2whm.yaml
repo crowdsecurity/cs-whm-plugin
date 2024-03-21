@@ -4,7 +4,12 @@
 filenames:
   - /var/log/apache2/domlogs/*
 exclude_regexps:
-  - .*ftpxferlog.*
+  - '.*ftpxferlog.*'
+  - '.*lock'
+  - '.*lock.*'
+  - '.*bkup'
+  - '.*bkup.*'
+  - '.*bytes_log'
   # you can excluse other regexp that are not apache2 log files
 labels:
   type: apache2
