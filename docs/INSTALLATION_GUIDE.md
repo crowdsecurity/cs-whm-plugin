@@ -94,8 +94,6 @@ sudo sh crowdsec.sh install --only-plugin
 ```
 
 
-```shell
-
 ### Go back to your WHM dashboard
 
 
